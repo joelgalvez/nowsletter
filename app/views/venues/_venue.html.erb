@@ -1,0 +1,79 @@
+<div id="<%= dom_id venue %>" class="bg-white shadow overflow-hidden sm:rounded-lg">
+  <div class="px-4 py-5 sm:px-6">
+    <h3 class="text-lg leading-6 font-medium text-gray-900"><%= venue.title %></h3>
+    <p class="mt-1 max-w-2xl text-sm text-gray-500">Venue details and associated information</p>
+  </div>
+  <div class="border-t border-gray-200">
+    <dl>
+      <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+        <dt class="text-sm font-medium text-gray-500">Website</dt>
+        <dd class="mt-1 text-sm text-gray-900 sm:col-span-2">
+          <% if venue.website.present? %>
+            <a href="<%= venue.website %>" target="_blank" class="text-indigo-600 hover:text-indigo-900 hover:underline">
+              <%= venue.website %>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block ml-1" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
+                <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
+              </svg>
+            </a>
+          <% else %>
+            <span class="text-gray-400">Not provided</span>
+          <% end %>
+        </dd>
+      </div>
+      
+      <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+        <dt class="text-sm font-medium text-gray-500">Tags</dt>
+        <dd class="mt-1 text-sm text-gray-900 sm:col-span-2">
+          <% if venue.tags.any? %>
+            <div class="flex flex-wrap gap-2">
+              <% venue.tags.each do |tag| %>
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+                  <%= tag.title %>
+                </span>
+              <% end %>
+            </div>
+          <% else %>
+            <span class="text-gray-400">No tags assigned</span>
+          <% end %>
+        </dd>
+      </div>
+      
+      <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+        <dt class="text-sm font-medium text-gray-500">Email Addresses</dt>
+        <dd class="mt-1 text-sm text-gray-900 sm:col-span-2">
+          <% if venue.senders.any? %>
+            <ul class="border border-gray-200 rounded-md divide-y divide-gray-200">
+              <% venue.senders.each do |sender| %>
+                <li class="pl-3 pr-4 py-3 flex items-center justify-between text-sm">
+                  <div class="w-0 flex-1 flex items-center">
+                    <span class="flex-1 w-0 truncate"><%= sender.email %></span>
+                  </div>
+                  <div class="ml-4 flex-shrink-0">
+                    <%= link_to "View", sender, class: "font-medium text-indigo-600 hover:text-indigo-500" %>
+                  </div>
+                </li>
+              <% end %>
+            </ul>
+          <% else %>
+            <span class="text-gray-400">No email addresses configured</span>
+          <% end %>
+        </dd>
+      </div>
+      
+      <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+        <dt class="text-sm font-medium text-gray-500">Events</dt>
+        <dd class="mt-1 text-sm text-gray-900 sm:col-span-2">
+          <div class="flex items-center">
+            <span class="px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+              <%= venue.events.count %> events
+            </span>
+            <% if venue.events.any? %>
+              <%= link_to "View events", events_path(venue_id: venue.id), class: "ml-4 text-sm text-indigo-600 hover:text-indigo-900" %>
+            <% end %>
+          </div>
+        </dd>
+      </div>
+    </dl>
+  </div>
+</div>

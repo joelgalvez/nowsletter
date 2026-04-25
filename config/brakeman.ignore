@@ -1,0 +1,269 @@
+{
+  "ignored_warnings": [
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 4,
+      "fingerprint": "1a95bd3f3329538ffd823b4c006acbabcd8bed12263f5a7513a1da5b20dccb2d",
+      "check_name": "LinkToHref",
+      "message": "Potentially unsafe model attribute in `link_to` href",
+      "file": "app/views/venues/index.html.erb",
+      "line": 70,
+      "link": "https://brakemanscanner.org/docs/warning_types/link_to_href",
+      "code": "link_to((Unresolved Model).new.website, (Unresolved Model).new.website, :target => \"_blank\", :class => \"text-indigo-600 hover:text-indigo-900 hover:underline\")",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "VenuesController",
+          "method": "index",
+          "line": 38,
+          "file": "app/controllers/venues_controller.rb",
+          "rendered": {
+            "name": "venues/index",
+            "file": "app/views/venues/index.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "venues/index"
+      },
+      "user_input": "(Unresolved Model).new.website",
+      "confidence": "Weak",
+      "note": "Pre-existing warning, reviewed and accepted"
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 4,
+      "fingerprint": "2b1b685d4ee1df1bdf3ebfc9150e73c8ff555f96cca4b5e81c1698948339fe9c",
+      "check_name": "LinkToHref",
+      "message": "Potentially unsafe model attribute in `link_to` href",
+      "file": "app/views/venues/index.html.erb",
+      "line": 68,
+      "link": "https://brakemanscanner.org/docs/warning_types/link_to_href",
+      "code": "link_to(highlight((Unresolved Model).new.website, params[:query], :highlighter => \"<span class=\\\"bg-yellow-100\\\">\\\\1</span>\").html_safe, (Unresolved Model).new.website, :target => \"_blank\", :class => \"text-indigo-600 hover:text-indigo-900 hover:underline\")",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "VenuesController",
+          "method": "index",
+          "line": 38,
+          "file": "app/controllers/venues_controller.rb",
+          "rendered": {
+            "name": "venues/index",
+            "file": "app/views/venues/index.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "venues/index"
+      },
+      "user_input": "(Unresolved Model).new.website",
+      "confidence": "Weak",
+      "note": "Pre-existing warning, reviewed and accepted"
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "2f1e9ec2b416b48cee2944d899018113b77bc333185bd1c898de29147bc119dc",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/overview/index.html.erb",
+      "line": 8,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "Message.joins(:list).where(:list => ({ :title => \"index\" })).first.body.to_s.gsub!(\"[]\", \"<video src=\\\"/clicking2.mp4\\\" controls autoplay muted loop style=\\\"padding-left:30px;padding-right:30px;filter:blur(1px);\\\"></video>\")",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "OverviewController",
+          "method": "index",
+          "line": 11,
+          "file": "app/controllers/overview_controller.rb",
+          "rendered": {
+            "name": "overview/index",
+            "file": "app/views/overview/index.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "overview/index"
+      },
+      "user_input": null,
+      "confidence": "High",
+      "note": "Pre-existing warning, reviewed and accepted"
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "4e17927fa920871292d3f2417d1c931927dc753fcba0d5606a6d663e37bed779",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/controllers/venues_controller.rb",
+      "line": 28,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "Arel.sql(\"COUNT(events.id) #{(params[:direction] or \"desc\")}\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "VenuesController",
+        "method": "index"
+      },
+      "user_input": "params[:direction]",
+      "confidence": "High",
+      "note": "Pre-existing warning, reviewed and accepted"
+    },
+    {
+      "warning_type": "Mass Assignment",
+      "warning_code": 105,
+      "fingerprint": "698446d774e663affd6286eba1b6078605b99eb0fc2df7bcbb62214ec3a9ca17",
+      "check_name": "PermitAttributes",
+      "message": "Potentially dangerous key allowed for mass assignment",
+      "file": "app/controllers/users_controller.rb",
+      "line": 107,
+      "link": "https://brakemanscanner.org/docs/warning_types/mass_assignment/",
+      "code": "params.require(:user).permit(:email_address, :password, :password_confirmation, :venue_id, :role)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "UsersController",
+        "method": "user_params"
+      },
+      "user_input": ":role",
+      "confidence": "Medium",
+      "note": "Pre-existing warning, reviewed and accepted"
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "95d7307299bed8acdc2016026e27054f58cc18994186fa1b539cc026cffee039",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/letters/_letter.html.erb",
+      "line": 6,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "Letter.new(letter_params).display_body",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "LettersController",
+          "method": "create",
+          "line": 50,
+          "file": "app/controllers/letters_controller.rb",
+          "rendered": {
+            "name": "letters/show",
+            "file": "app/views/letters/show.html.erb"
+          }
+        },
+        {
+          "type": "template",
+          "name": "letters/show",
+          "line": 7,
+          "file": "app/views/letters/show.html.erb",
+          "rendered": {
+            "name": "letters/_letter",
+            "file": "app/views/letters/_letter.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "letters/_letter"
+      },
+      "user_input": null,
+      "confidence": "High",
+      "note": "Pre-existing warning, reviewed and accepted"
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "a0c1d1b6537b8d5f03a55aff50e252d464acc45785044c6ce9800e21a2ded50e",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/controllers/senders_controller.rb",
+      "line": 18,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "Arel.sql(\"#{(params[:sort] or \"created_at\")} #{(params[:direction] or \"desc\")}\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "SendersController",
+        "method": "index"
+      },
+      "user_input": "params[:sort]",
+      "confidence": "High",
+      "note": "Pre-existing warning, reviewed and accepted"
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "a25c0141ca466ec17a77c64c9a1e5cc2e8420494d15679a4814ee8ef71bc1ddd",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/controllers/venues_controller.rb",
+      "line": 30,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "Arel.sql(\"#{(params[:sort] or \"created_at\")} #{(params[:direction] or \"desc\")}\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "VenuesController",
+        "method": "index"
+      },
+      "user_input": "params[:sort]",
+      "confidence": "High",
+      "note": "Pre-existing warning, reviewed and accepted"
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "edfa138f102227a6fc0be76fdd1ad6f3d8fd4bdab532152777796a5a027bbeac",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/controllers/letters_controller.rb",
+      "line": 83,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "ActiveRecord::Base.connection.execute(\"DELETE FROM events_tags WHERE event_id IN (#{Letter.find(params[:id]).events.pluck(:id).map do\n ActiveRecord::Base.connection.quote(id)\n end.join(\", \")})\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "LettersController",
+        "method": "destroy"
+      },
+      "user_input": "Letter.find(params[:id]).events",
+      "confidence": "High",
+      "note": "Pre-existing warning, reviewed and accepted"
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "f69442a49cd578faba8df80af00b6854f0042b95d9d8ecb8478e0fa8c35c72bc",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/overview/letter.html.erb",
+      "line": 11,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "Letter.find(params[:id]).strip_pii(Letter.find(params[:id]).display_body)",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "OverviewController",
+          "method": "letter",
+          "line": 121,
+          "file": "app/controllers/overview_controller.rb",
+          "rendered": {
+            "name": "overview/letter",
+            "file": "app/views/overview/letter.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "overview/letter"
+      },
+      "user_input": null,
+      "confidence": "High",
+      "note": "Pre-existing warning, reviewed and accepted"
+    }
+  ]
+}

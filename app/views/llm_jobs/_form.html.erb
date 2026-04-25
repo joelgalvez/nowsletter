@@ -1,0 +1,32 @@
+<%= form_with(model: llm_job, class: "contents") do |form| %>
+  <% if llm_job.errors.any? %>
+    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-md mt-3">
+      <h2><%= pluralize(llm_job.errors.count, "error") %> prohibited this llm_job from being saved:</h2>
+
+      <ul class="list-disc ml-6">
+        <% llm_job.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="my-5">
+    <%= form.label :prompt %>
+    <%= form.textarea :prompt, rows: 4, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": llm_job.errors[:prompt].none?, "border-red-400 focus:outline-red-600": llm_job.errors[:prompt].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :result %>
+    <%= form.textarea :result, rows: 4, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": llm_job.errors[:result].none?, "border-red-400 focus:outline-red-600": llm_job.errors[:result].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :status %>
+    <%= form.select :status, LlmJob::STATUSES, {}, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": llm_job.errors[:status].none?, "border-red-400 focus:outline-red-600": llm_job.errors[:status].any?}] %>
+  </div>
+
+  <div class="inline">
+    <%= form.submit class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white inline-block font-medium cursor-pointer" %>
+  </div>
+<% end %>

@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: MyString
+  venue: one
+  role: admin
+  severity: normal
+
+two:
+  title: MyString
+  venue: one
+  role: editor
+  severity: high

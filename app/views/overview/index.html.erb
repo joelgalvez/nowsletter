@@ -1,0 +1,10 @@
+<div class="p-4 max-w-[70rem] text-3xl lg:text-4xl mx-auto my-16 text-red-500 text">
+
+<%
+	t = '<video src="/clicking2.mp4" controls autoplay muted loop style="padding-left:30px;padding-right:30px;filter:blur(1px);"></video>'
+	text = Message.joins(:list).where(list: {title: 'index'}).first.body.to_s.gsub! "[]", t
+%>
+
+<%=raw text %>
+
+</div>

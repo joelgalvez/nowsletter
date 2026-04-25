@@ -1,0 +1,161 @@
+<% venue_email_domain = ENV["VENUE_EMAIL_DOMAIN"] %>
+<% email_prefix = ENV["EMAIL_PREFIX_PATTERN"] %>
+<div class="crud">
+  <% if notice.present? %>
+    <p class="flash-notice" id="notice"><%= notice %></p>
+  <% end %>
+
+  <div id="clipboard-toast" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-sm px-4 py-2 rounded-lg shadow-lg z-50 transition-opacity duration-300">
+    Copied to clipboard
+  </div>
+
+  <% content_for :title, "Venues" %>
+
+  <div class="page-header mb-8">
+    <div>
+      <h1 class="font-bold text-4xl text-gray-800">Venues</h1>
+      <p class="text-gray-500 mt-1">Manage your venue listings</p>
+    </div>
+    <%= link_to new_venue_path, class: "btn-primary-indigo" do %>
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+      </svg>
+      New venue
+    <% end %>
+  </div>
+
+  <div class="index-card">
+    <div class="index-card-header">
+      <div class="sm:flex-auto">
+        <h2 class="text-xl font-semibold text-gray-800">All venues</h2>
+        <p class="mt-2 text-sm text-gray-600">A list of all venues in the database with their basic information.</p>
+      </div>
+      <div class="mt-4 sm:mt-0 sm:flex-none flex items-center gap-4">
+        <%= render "shared/search_form", url: venues_path, query: @query, placeholder: "Search venues...", frame_id: "venues_list", sort: @sort, direction: @direction %>
+        <span class="badge-count"><%= pluralize(@venues.total_count, 'venue') %></span>
+      </div>
+    </div>
+
+    <%= turbo_frame_tag "venues_list" do %>
+      <div class="index-table overflow-x-auto">
+        <div class="grid grid-cols-[2fr_0.5fr_2fr_2fr_1fr_1fr_1fr_1fr_1fr_2fr_1fr]">
+        <div class="col-span-full grid grid-cols-subgrid index-row index-row-header">
+          <div class="index-th"><%= sortable "title", "Title", frame: "venues_list" %></div>
+          <div class="index-th"><%= sortable "checked", "Checked", frame: "venues_list" %></div>
+          <div class="index-th"><%= sortable "website", "Website", frame: "venues_list" %></div>
+          <div class="index-th"><%= sortable "code", "Secret Inbox", frame: "venues_list" %></div>
+          <div class="index-th"><%= sortable "city", "City", frame: "venues_list" %></div>
+          <div class="index-th"><%= sortable "events_count", "Events", frame: "venues_list" %></div>
+          <div class="index-th"><%= sortable "emails_sent_count", "Emails Sent", frame: "venues_list" %></div>
+          <div class="index-th"><%= sortable "opt_in", "Opt In", frame: "venues_list" %></div>
+          <div class="index-th"><%= sortable "opt_out", "Opt Out", frame: "venues_list" %></div>
+          <div class="index-th-label">Tags</div>
+          <div class="index-th-label">Actions</div>
+        </div>
+
+        <% if @venues.present? %>
+          <% @venues.each do |venue| %>
+            <div class="col-span-full grid grid-cols-subgrid index-row bg-white hover:bg-gray-50 transition-colors">
+              <div class="index-td">
+                <div class="index-td-text">
+                  <% if @query.present? %>
+                    <%= highlight(venue.title, @query, highlighter: '<span class="bg-yellow-100">\\1</span>') %>
+                  <% else %>
+                    <%= venue.title %>
+                  <% end %>
+                </div>
+              </div>
+              <div class="index-td">
+                <% if venue.checked? %>
+                  <span class="badge-green">Yes</span>
+                <% else %>
+                  <span class="badge-red">No</span>
+                <% end %>
+              </div>
+              <div class="index-td-muted">
+                <% if venue.website.present? %>
+                  <% if @query.present? && venue.website.downcase.include?(@query.downcase) %>
+                    <%= link_to highlight(venue.website, @query, highlighter: '<span class="bg-yellow-100">\\1</span>').html_safe, venue.website, target: "_blank", class: "text-indigo-600 hover:text-indigo-900 hover:underline" %>
+                  <% else %>
+                    <%= link_to venue.website, venue.website, target: "_blank", class: "text-indigo-600 hover:text-indigo-900 hover:underline" %>
+                  <% end %>
+                <% else %>
+                  <span class="text-gray-400">None</span>
+                <% end %>
+              </div>
+              <div class="index-td">
+                <span class="flex items-center gap-1 whitespace-nowrap">
+                  <button type="button" onclick="navigator.clipboard.writeText('<%= email_prefix %><%= venue.code %>@<%= venue_email_domain %>').then(() => { const t = document.getElementById('clipboard-toast'); t.classList.remove('hidden'); setTimeout(() => t.classList.add('hidden'), 2000) })" class="text-gray-400 hover:text-gray-600 transition-colors" title="Copy to clipboard">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                  </button>
+                  <span class="badge whitespace-nowrap"><%= email_prefix %><%= venue.code %>@<%= venue_email_domain %></span>
+                </span>
+              </div>
+              <div class="index-td"><span class="badge"><%= venue.city&.name %></span></div>
+              <div class="index-td"><span class="badge-green"><%= venue.events.count %></span></div>
+              <div class="index-td"><span class="badge-blue"><%= venue.emails_sent_count || 0 %></span></div>
+              <div class="index-td">
+                <% if venue.opt_in %>
+                  <span class="badge-green">Yes</span>
+                <% else %>
+                  <span class="badge-red">No</span>
+                <% end %>
+              </div>
+              <div class="index-td">
+                <% if venue.opt_out %>
+                  <span class="badge-red">Yes</span>
+                <% else %>
+                  <span class="badge-green">No</span>
+                <% end %>
+              </div>
+              <div class="index-td-muted">
+                <div class="flex flex-wrap gap-1.5">
+                  <% venue.tags.each do |tag| %>
+                    <span class="badge-blue"><%= tag.title %></span>
+                  <% end %>
+                  <% if venue.tags.empty? %>
+                    <span class="text-gray-400 text-xs">No tags</span>
+                  <% end %>
+                </div>
+              </div>
+              <div class="index-td">
+                <%= link_to edit_venue_path(venue), class: "action-link-secondary", data: { turbo: "false" } do %><span>Edit</span><% end %>
+              </div>
+            </div>
+          <% end %>
+        <% else %>
+          <div class="px-6 py-8 text-center text-gray-500 bg-white">
+            <% if @query.present? %>
+              No venues found matching "<%= @query %>".
+              <%= link_to "Clear search", venues_path(sort: @sort, direction: @direction), data: { turbo_frame: "venues_list" }, class: "text-indigo-600 hover:text-indigo-900" %>.
+            <% else %>
+              No venues found. <%= link_to "Create your first venue", new_venue_path, class: "text-indigo-600 hover:text-indigo-900" %>.
+            <% end %>
+          </div>
+        <% end %>
+        </div>
+      </div>
+
+      <% if @venues.total_pages > 1 %>
+        <div class="mt-8 flex justify-center">
+          <%= paginate @venues, params: { sort: @sort, direction: @direction, query: @query } %>
+        </div>
+        <div class="text-center mt-2 text-sm text-gray-500">
+          Showing <%= @venues.offset_value + 1 %> to <%= [@venues.offset_value + @venues.limit_value, @venues.total_count].min %> of <%= @venues.total_count %> venues
+          <% if @query.present? %>matching "<%= @query %>"<% end %>
+          <% if @sort != 'created_at' || @direction != 'desc' %>
+            sorted by <%= @sort.humanize.downcase %> (<%= @direction == 'asc' ? 'ascending' : 'descending' %>)
+          <% end %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+
+  <% if @venues.total_count == 0 && !@query.present? %>
+    <div class="mt-8 text-center">
+      <p class="text-gray-500">No venues available. Get started by creating your first venue.</p>
+    </div>
+  <% end %>
+</div>

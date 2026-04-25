@@ -1,0 +1,97 @@
+<div class="crud">
+  <% if notice.present? %>
+    <p class="flash-notice" id="notice"><%= notice %></p>
+  <% end %>
+
+  <% content_for :title, "Senders" %>
+
+  <div class="page-header mb-8">
+    <div>
+      <h1 class="font-bold text-4xl text-gray-800">Senders</h1>
+      <p class="text-gray-500 mt-1">Manage email sender addresses</p>
+    </div>
+    <%= link_to new_sender_path, class: "btn-primary-indigo" do %>
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+      </svg>
+      New sender
+    <% end %>
+  </div>
+
+  <div class="index-card">
+    <div class="index-card-header">
+      <div class="sm:flex-auto">
+        <h2 class="text-xl font-semibold text-gray-800">All senders</h2>
+        <p class="mt-2 text-sm text-gray-600">A list of all email senders in the database with their venue association.</p>
+      </div>
+      <div class="mt-4 sm:mt-0 sm:flex-none flex items-center gap-4">
+        <%= render "shared/search_form", url: senders_path, query: @query, placeholder: "Search senders...", frame_id: "senders_list", sort: @sort, direction: @direction %>
+        <span class="badge-count"><%= pluralize(@senders.total_count, 'sender') %></span>
+      </div>
+    </div>
+
+    <%= turbo_frame_tag "senders_list" do %>
+      <div class="index-table overflow-x-auto">
+        <div class="index-row index-row-header grid grid-cols-[3fr_2fr_1fr_1fr]">
+          <div class="index-th"><%= sortable "email", "Email", frame: "senders_list" %></div>
+          <div class="index-th-label">Venue</div>
+          <div class="index-th"><%= sortable "created_at", "Added On", frame: "senders_list" %></div>
+          <div class="index-th-label">Actions</div>
+        </div>
+
+        <% if @senders.present? %>
+          <% @senders.each do |sender| %>
+            <div class="index-row grid grid-cols-[3fr_2fr_1fr_1fr] bg-white hover:bg-gray-50 transition-colors">
+              <div class="index-td">
+                <div class="index-td-text">
+                  <% if @query.present? %>
+                    <%= highlight(sender.email, @query, highlighter: '<span class="bg-yellow-100">\\1</span>') %>
+                  <% else %>
+                    <%= sender.email %>
+                  <% end %>
+                </div>
+              </div>
+              <div class="index-td">
+                <div class="text-sm text-gray-900">
+                  <%= link_to sender.venue.title, venue_path(sender.venue), class: "text-indigo-600 hover:text-indigo-900 hover:underline" %>
+                </div>
+              </div>
+              <div class="index-td-muted"><%= sender.created_at.strftime("%b %d, %Y") %></div>
+              <div class="index-td">
+                <%= link_to edit_sender_path(sender), class: "action-link-secondary", data: { turbo_frame: "_top" } do %><span>Edit</span><% end %>
+              </div>
+            </div>
+          <% end %>
+        <% else %>
+          <div class="px-6 py-8 text-center text-gray-500 bg-white">
+            <% if @query.present? %>
+              No senders found matching "<%= @query %>".
+              <%= link_to "Clear search", senders_path(sort: @sort, direction: @direction), data: { turbo_frame: "senders_list" }, class: "text-indigo-600 hover:text-indigo-900" %>.
+            <% else %>
+              No senders found. <%= link_to "Create your first sender", new_sender_path, class: "text-indigo-600 hover:text-indigo-900" %>.
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+
+      <% if @senders.total_pages > 1 %>
+        <div class="mt-8 flex justify-center">
+          <%= paginate @senders, params: { sort: @sort, direction: @direction, query: @query } %>
+        </div>
+        <div class="text-center mt-2 text-sm text-gray-500">
+          Showing <%= @senders.offset_value + 1 %> to <%= [@senders.offset_value + @senders.limit_value, @senders.total_count].min %> of <%= @senders.total_count %> senders
+          <% if @query.present? %>matching "<%= @query %>"<% end %>
+          <% if @sort != 'created_at' || @direction != 'desc' %>
+            sorted by <%= @sort.humanize.downcase %> (<%= @direction == 'asc' ? 'ascending' : 'descending' %>)
+          <% end %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+
+  <% if @senders.total_count == 0 && !@query.present? %>
+    <div class="mt-8 text-center">
+      <p class="text-gray-500">No senders available. Get started by creating your first sender.</p>
+    </div>
+  <% end %>
+</div>

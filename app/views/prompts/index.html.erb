@@ -1,0 +1,29 @@
+<% content_for :title, "Prompts" %>
+
+<div class="crud">
+  <% if notice.present? %>
+    <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-md inline-block" id="notice"><%= notice %></p>
+  <% end %>
+
+  <div class="flex justify-between items-center">
+    <h1 class="font-bold text-4xl">Prompts</h1>
+    <%= link_to "New prompt", new_prompt_path, class: "rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white block font-medium" %>
+  </div>
+
+  <div id="prompts" class="min-w-full divide-y divide-gray-200 space-y-5">
+    <% if @prompts.any? %>
+      <% @prompts.each do |prompt| %>
+        <div class="flex flex-col sm:flex-row justify-between items-center pb-5 sm:pb-0">
+          <%= render prompt %>
+          <div class="w-full sm:w-auto flex flex-col sm:flex-row space-x-2 space-y-2">
+            <%= link_to "Show", prompt, class: "w-full sm:w-auto text-center rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
+            <%= link_to "Edit", edit_prompt_path(prompt), class: "w-full sm:w-auto text-center rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
+            <%= button_to "Destroy", prompt, method: :delete, disabled: prompt.title == "default", class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 text-white font-medium #{prompt.title == 'default' ? 'bg-gray-300 cursor-not-allowed' : 'bg-red-600 hover:bg-red-500 cursor-pointer'}", data: (prompt.title == "default" ? {} : { turbo_confirm: "Are you sure?" }) %>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <p class="text-center my-10">No prompts found.</p>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,15 @@
+<% if event.letter.present? %>
+	<a target="_blank" href="<%= overview_letter_url(id: event.letter, event_id: event.id) %>">
+		<div class="text-smaller">
+			<%= format_date(event.start_date, event.end_date) %>, <%= event.venue.title %>
+		</div>
+		<%= event.title %>
+	</a>
+<% else %>
+	<div>
+		<div class="text-smaller">
+			<%= format_date(event.start_date, event.end_date) %>, <%= event.venue.title %>
+		</div>
+		<%= event.title %>
+	</div>
+<% end %>

@@ -1,0 +1,38 @@
+<h2>New Email Received</h2>
+
+<p>A new email has been received:</p>
+
+<table style="border-collapse: collapse; width: 100%; max-width: 600px;">
+  <tr>
+    <td style="padding: 8px; border: 1px solid #ddd;"><strong>From:</strong></td>
+    <td style="padding: 8px; border: 1px solid #ddd;"><%= @from %></td>
+  </tr>
+  <tr>
+    <td style="padding: 8px; border: 1px solid #ddd;"><strong>Subject:</strong></td>
+    <td style="padding: 8px; border: 1px solid #ddd;"><%= @subject %></td>
+  </tr>
+  <tr>
+    <td style="padding: 8px; border: 1px solid #ddd;"><strong>Date:</strong></td>
+    <td style="padding: 8px; border: 1px solid #ddd;"><%= @sent_date %></td>
+  </tr>
+  <tr>
+    <td style="padding: 8px; border: 1px solid #ddd;"><strong>Venue:</strong></td>
+    <td style="padding: 8px; border: 1px solid #ddd;"><%= @venue&.title || 'N/A' %> (<%= @venue&.code || 'N/A' %>)</td>
+  </tr>
+  <tr>
+    <td style="padding: 8px; border: 1px solid #ddd;"><strong>Letter ID:</strong></td>
+    <td style="padding: 8px; border: 1px solid #ddd;"><%= @letter.id %></td>
+  </tr>
+  <tr>
+    <td style="padding: 8px; border: 1px solid #ddd;"><strong>Status:</strong></td>
+    <td style="padding: 8px; border: 1px solid #ddd;"><%= @letter.status %></td>
+  </tr>
+</table>
+
+<p style="margin-top: 16px;">
+  <% if @venue&.checked == false %>
+    <a href="<%= letters_url(token: @login_token) %>" style="display: inline-block; padding: 10px 20px; background-color: #4f46e5; color: #ffffff; text-decoration: none; border-radius: 6px;">View in Inbox</a>
+  <% else %>
+    <a href="<%= dashboard_letter_url(@letter.id, token: @login_token) %>" style="display: inline-block; padding: 10px 20px; background-color: #4f46e5; color: #ffffff; text-decoration: none; border-radius: 6px;">View in Dashboard</a>
+  <% end %>
+</p>

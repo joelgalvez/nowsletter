@@ -1,0 +1,19 @@
+<%# <div class="relative @container <%= event.soon? ? 'col-span-2 row-span-2' : ''  ">  %>
+<div class="relative @container  "> 
+
+  <% if authenticated? && Current.user.admin? && !event.letter.nil?%>
+    <div class="absolute top-8 left-1 ">
+      <div class="hover:text-red-500 p-1 bg-white m-1 rounded-md shadow cursor-pointer">
+        <%= link_to 'Edit', dashboard_letter_path(event.letter.id, anchor: "event-#{event.id}") %>
+      </div>
+      <div class="hover:text-red-500 p-1 bg-white m-1 rounded-md shadow cursor-pointer">
+        <%= button_to 'Hide', unpublish_event_path(event), method: :patch, class: 'cursor-pointer', data: { turbo_confirm: 'Are you sure you want to unpublish this event?' } %>
+      </div>
+    </div>
+  <% end %>
+  
+  <%= link_to_letter(event) do %>
+    <%= render 'event_part', event: event %>
+  <% end %>
+
+</div>

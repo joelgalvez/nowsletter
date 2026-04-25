@@ -1,0 +1,44 @@
+<div class="mb-4 pb-4 border-b border-gray-200 last:border-0" id="sender_<%= sender.id || 'new' %>">
+  <%= form_with(model: sender, local: true, html: { 
+      class: "grid grid-cols-1 md:grid-cols-3 gap-4",
+      data: { 
+        controller: "sender-form",
+        action: "submit->sender-form#showFeedback"
+      }
+    }) do |form| %>
+    <%= form.hidden_field :venue_id %>
+    <%= hidden_field_tag :redirect_to_venue, true %>
+    
+    <div>
+      <%= form.text_field :email, 
+          class: "block shadow rounded-md border border-gray-300 outline-none px-3 py-2 w-full", 
+          placeholder: "Email address",
+          data: { sender_form_target: "email" } %>
+    </div>
+    
+    <div class="flex items-center gap-2">
+      <% if sender.persisted? %>
+        <%= form.submit "Update", 
+            class: "bg-indigo-600 hover:bg-indigo-700 text-white text-sm py-1 px-3 rounded shadow-sm transition-colors",
+            data: { sender_form_target: "submitButton" } %>
+        <span class="hidden text-green-600 text-sm font-medium" data-sender-form-target="feedback">
+          ✓ Updated
+        </span>
+      <% else %>
+        <%= form.submit "Add Sender", 
+            class: "bg-indigo-600 hover:bg-indigo-700 text-white text-sm py-1 px-3 rounded shadow-sm transition-colors",
+            data: { sender_form_target: "submitButton" } %>
+      <% end %>
+    </div>
+  <% end %>
+  
+  <% if sender.persisted? %>
+    <div class="mt-2 flex justify-end">
+      <%= button_to "Delete", 
+          sender_path(sender, redirect_to_venue: true), 
+          method: :delete, 
+          data: { turbo_confirm: "Are you sure you want to delete this sender?" },
+          class: "bg-red-600 hover:bg-red-700 text-white text-sm py-1 px-3 rounded shadow-sm transition-colors" %>
+    </div>
+  <% end %>
+</div>

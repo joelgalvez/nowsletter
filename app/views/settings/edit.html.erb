@@ -1,0 +1,17 @@
+<% content_for :title, "Editing setting" %>
+
+<%= turbo_frame_tag "setting_#{@setting.id}", class: "contents" do %>
+  <div class="index-row grid grid-cols-[3fr_2fr_2fr_1fr] bg-white">
+    <%= form_with model: @setting, class: "contents" do |form| %>
+      <div class="index-td text-gray-500 text-sm"><%= @setting.description %></div>
+      <div class="index-td font-medium"><%= @setting.name %></div>
+      <div class="index-td">
+        <%= form.text_field :value, class: "w-full border border-gray-300 rounded px-2 py-1 text-sm focus:outline-blue-500", autofocus: true %>
+      </div>
+      <div class="index-td text-right flex items-center justify-end gap-2">
+        <%= form.submit "Save", class: "text-white bg-blue-600 hover:bg-blue-500 rounded px-2.5 py-1 text-sm cursor-pointer" %>
+        <%= link_to "Cancel", setting_path(@setting), class: "text-gray-500 hover:text-gray-700 text-sm" %>
+      </div>
+    <% end %>
+  </div>
+<% end %>

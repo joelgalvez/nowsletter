@@ -1,0 +1,29 @@
+<% content_for :title, "Posts" %>
+
+<div class="crud">
+  <% if notice.present? %>
+    <p class="flash-notice" id="notice"><%= notice %></p>
+  <% end %>
+
+  <div class="page-header">
+    <h1 class="page-title">Posts</h1>
+    <%= link_to "New post", new_post_path, class: "btn-primary" %>
+  </div>
+
+  <div id="posts" class="min-w-full divide-y divide-gray-200 space-y-5">
+    <% if @posts.any? %>
+      <% @posts.each do |post| %>
+        <div class="flex flex-col sm:flex-row justify-between items-center pb-5 sm:pb-0">
+          <%= render post %>
+          <div class="w-full sm:w-auto flex flex-col sm:flex-row gap-2">
+            <%= link_to "Show", post, class: "btn-secondary" %>
+            <%= link_to "Edit", edit_post_path(post), class: "btn-secondary" %>
+            <%= button_to "Destroy", post, method: :delete, class: "btn-danger", data: { turbo_confirm: "Are you sure?" } %>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <p class="text-center my-10">No posts found.</p>
+    <% end %>
+  </div>
+</div>

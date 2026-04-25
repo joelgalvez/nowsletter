@@ -1,0 +1,57 @@
+<%= form_with(model: log, class: "contents") do |form| %>
+  <% if log.errors.any? %>
+    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-md mt-3">
+      <h2><%= pluralize(log.errors.count, "error") %> prohibited this log from being saved:</h2>
+
+      <ul class="list-disc ml-6">
+        <% log.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="my-5">
+    <%= form.label :title %>
+    <%= form.text_field :title, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": log.errors[:title].none?, "border-red-400 focus:outline-red-600": log.errors[:title].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :venue_id, "Venue (optional)" %>
+    <%= form.select :venue_id, options_for_select([["-- No venue --", nil]] + Venue.all.map{|v| [v.title, v.id]}, log.venue_id), {}, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": log.errors[:venue_id].none?, "border-red-400 focus:outline-red-600": log.errors[:venue_id].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :event_id, "Event (optional)" %>
+    <%= form.select :event_id, options_for_select([["-- No event --", nil]] + Event.all.map{|e| [e.title, e.id]}, log.event_id), {}, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": log.errors[:event_id].none?, "border-red-400 focus:outline-red-600": log.errors[:event_id].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :letter_id, "Letter (optional)" %>
+    <%= form.select :letter_id, options_for_select([["-- No letter --", nil]] + Letter.all.map{|l| ["#{l.from}: #{l.subject}", l.id]}, log.letter_id), {}, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": log.errors[:letter_id].none?, "border-red-400 focus:outline-red-600": log.errors[:letter_id].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :user_id, "User (optional)" %>
+    <%= form.select :user_id, options_for_select([["-- No user --", nil]] + User.all.map{|u| [u.email_address, u.id]}, log.user_id), {}, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": log.errors[:user_id].none?, "border-red-400 focus:outline-red-600": log.errors[:user_id].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :role %>
+    <%= form.select :role, options_for_select([["admin", "admin"], ["editor", "editor"]], log.role || "admin"), {}, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": log.errors[:role].none?, "border-red-400 focus:outline-red-600": log.errors[:role].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :severity %>
+    <%= form.select :severity, options_for_select([["Normal", "normal"], ["High", "high"]], log.severity), {}, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": log.errors[:severity].none?, "border-red-400 focus:outline-red-600": log.errors[:severity].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :text %>
+    <%= form.text_area :text, rows: 4, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": log.errors[:description].none?, "border-red-400 focus:outline-red-600": log.errors[:description].any?}] %>
+  </div>
+
+  <div class="inline">
+    <%= form.submit class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white inline-block font-medium cursor-pointer" %>
+  </div>
+<% end %>

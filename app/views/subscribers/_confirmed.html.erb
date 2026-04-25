@@ -1,0 +1,40 @@
+<%= turbo_frame_tag "subscriber_form" do %>
+  <div data-controller="subscribe-form" data-subscribe-form-folded-value="false" style="visibility: hidden;">
+    <!-- Backdrop -->
+    <div
+      class="fixed w-full h-screen bg-[rgba(0,0,0,0.5)] top-0 left-0 transition-opacity duration-300 z-10 overscroll-contain"
+      style="opacity: 0; pointer-events: none;"
+      data-subscribe-form-target="backdrop"
+      data-action="click->subscribe-form#fold"
+    ></div>
+
+    <!-- Form Container -->
+    <div
+      class="fixed w-full left-0  text-white transition-all duration-300 z-20 overflow-clip cursor-pointer"
+      style="height: 3rem; top: calc(100vh - 3rem); "
+      data-subscribe-form-target="container"
+      data-action="click->subscribe-form#handleContainerClick"
+    >
+      <div class="h-[50vh] bg-red-400 transition-all duration-300" data-subscribe-form-target="content">
+        <!-- Toggle Arrow Button -->
+        <button
+          type="button"
+          class="absolute top-2 right-2 w-8 h-8 flex items-center justify-center text-white hover:drop-shadow-[0_0_3px_white] rounded transition cursor-pointer"
+          data-action="click->subscribe-form#toggle"
+          data-subscribe-form-target="arrow"
+        >
+          <svg class="w-6 h-6 transition-transform duration-300" style="transform: rotate(180deg);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+
+        <div class="container max-w-[40rem] mx-auto p-2 h-full justify-center">
+          <div class="text-center py-8">
+            <div class="text-4xl mb-4">✓</div>
+            <h3 class="text-lg font-semibold mb-2"><%= message %></h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

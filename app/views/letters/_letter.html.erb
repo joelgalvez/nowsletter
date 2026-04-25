@@ -1,0 +1,18 @@
+<div id="<%= dom_id letter %>">
+
+
+  <p class="my-5">
+    <%= letter.display_body.html_safe %>
+  </p>
+
+  <p class="my-5">
+    <strong class="block font-medium mb-1">Subject:</strong> <%= letter.subject %>
+  </p>
+
+  <p class="my-5">
+    <strong class="block font-medium mb-1">Sent date:</strong>
+    <%= letter.sent_date %>
+  </p>
+
+
+</div>

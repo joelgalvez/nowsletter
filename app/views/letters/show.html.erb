@@ -1,0 +1,16 @@
+<div class="crud">
+  <div class="mx-auto">
+    <% if notice.present? %>
+      <p class="flash-notice" id="notice"><%= notice %></p>
+    <% end %>
+
+    <%= link_to "Back to letters", letters_path, class: "btn-primary" %>
+
+    <%= render @letter %>
+
+    <div class="flex gap-2 mt-2">
+      
+      <%= button_to "Destroy this letter", @letter, method: :delete, class: "btn-danger", data: { turbo_confirm: "Are you sure?" } %>
+    </div>
+  </div>
+</div>

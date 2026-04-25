@@ -1,0 +1,152 @@
+<style>
+
+	h1 {
+		margin-bottom: 0;
+	}
+	h2 {
+		margin-bottom: 0;
+	}
+	.italic {
+		font-style: italic;
+	}
+	.font {
+		font-family: Arial, sans-serif;
+		font-size: 18px;
+	}
+	.width {
+		width: 600px;
+		margin: auto;
+	}
+	.padding {
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+	.mb-small {
+		margin-bottom: 5px;
+	}
+	.mb-big {
+		margin-bottom: 15px;
+	}
+	.mb-bigger {
+		margin-bottom: 45px;
+	}
+	table {
+		width: 100%;
+		table-layout: fixed;
+	}
+	td {
+		width: 50%;
+		padding-left: 5px;
+		padding-right: 5px;
+		vertical-align: top;
+		overflow: hidden;
+	}
+	.day {
+		margin-bottom: 60px;
+	}
+	.text-smaller {
+		font-size: 12px;
+	}
+	img {
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		border-radius: 8px;
+		max-width: 100%;
+		height: auto;
+	}
+	.border-b {
+		border-bottom: 1px solid ;
+		margin-bottom: 5px;
+		padding-bottom: 5px;
+	}
+	a {
+		color: inherit;
+		text-decoration: none;
+	}
+
+	h2 {
+		font-size: 40px;
+		margin-top: 40px;
+		margin-bottom: 10px;
+	}
+	h1 {
+		font-size: 40px;
+		margin-top: 40px;
+		margin-bottom: 10px;
+		line-height: 1.05;
+	}
+</style>
+
+<div class="font width">
+
+
+	<div class="padding mb-bigger">
+		<h1 class="mb-small italic"><%= ENV["APP_NAME"] %></h1>
+
+	</div>
+		
+
+	<% for day in @days %>
+		<% if day[:events].any? %>
+			<div class="mb-big">
+				<h2 class="padding"><%= day[:date].strftime("%A, %B %d") %></h2>
+				<table class="">
+					<% day[:events].select { |event| event.venue.opt_in && !event.letter.nil? }.each_slice(2) do |events_pair| %>
+						<tr >
+							<% events_pair.each do |event| %>
+								<td>
+									<a href="<%= overview_letter_url(id: event.letter, event_id: event.id) %>" data-turbo-frame="popup" data-turbo-action="advance">
+										<div class="border-b"></div>
+										<div class="mb-small text-smaller"><%= event.venue.title %></div>
+										<div class="mb-big">
+											<div class="mb-small" >
+												<% if event.display_lead_image.present? %>
+													<%= image_tag event.display_lead_image_thumbnail(600, 400, absolute: true), alt: event.title, width: 300, height: 210, style: "aspect-ratio:300/200;background-color:white;object-fit:cover;"%>
+												<% else %>
+													<%= image_tag 'cross.png', alt: event.title, width: 300, height: 210, style: "aspect-ratio:300/210;background-color:white;object-fit:cover;"%>
+												<% end %>
+											</div>
+											<div class="text-smaller mb-small">
+												<%= format_date(event.start_date, event.end_date) %>
+											</div>
+											<%= event.title %>
+											
+										</div>
+									</a>
+								</td>
+							<% end %>
+							<% if events_pair.length == 1 %>
+								<td></td>
+							<% end %>
+						</tr>
+					<% end %>
+				</table>
+			</div>
+			<% if day[:events].any? { |event| event.venue.opt_in == false || event.letter.nil? } %>
+				<div class="">
+					<div class="padding text-smaller mb-smaller ">
+					</div>
+					<% day[:events].select { |event| event.venue.opt_in == false || event.letter.nil? }.each do |event| %>
+						<div class="padding text-smaller mb-small">
+							<%= format_date(event.start_date, event.end_date) %> - <b><%= event.title %></b> at <%= event.venue.title %><% if event.venue.website.present? %> - <%= link_to event.venue.website.gsub(/^https?:\/\//, ''), "https://#{event.venue.website.gsub(/^https?:\/\//, '')}", target: "_blank", style: "text-decoration: underline;" %><% end %>
+						</div>
+					<% end %>
+				</div>
+			<% end %>
+		<% end %>
+	<% end %>
+
+	<h2 class="mb-big padding ">
+		Ongoing
+	</h2>
+	<% if !@ongoing_events.blank? %>
+		<div class="mb-big padding">
+			<% for event in @ongoing_events %>
+				<div class="mb-big">
+					<%= render partial: 'application/simple_event', locals: { event: event } %>
+				</div>
+			<% end %>
+		</div>
+	<% end %>	
+
+</div>
+

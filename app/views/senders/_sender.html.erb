@@ -1,0 +1,24 @@
+<div id="<%= dom_id sender %>" class="bg-white overflow-hidden shadow rounded-lg divide-y divide-gray-200">
+  <div class="px-4 py-5 sm:px-6">
+    <h3 class="text-lg leading-6 font-medium text-gray-900">Sender Details</h3>
+    <p class="mt-1 max-w-2xl text-sm text-gray-500">Email address information</p>
+  </div>
+  <div class="px-4 py-5 sm:p-6">
+    <dl class="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
+      <div class="sm:col-span-1">
+        <dt class="text-sm font-medium text-gray-500">Email</dt>
+        <dd class="mt-1 text-sm text-gray-900"><%= sender.email %></dd>
+      </div>
+      <div class="sm:col-span-1">
+        <dt class="text-sm font-medium text-gray-500">Venue</dt>
+        <dd class="mt-1 text-sm text-gray-900">
+          <%= link_to sender.venue.title, venue_path(sender.venue), class: "text-indigo-600 hover:text-indigo-900 hover:underline" %>
+        </dd>
+      </div>
+      <div class="sm:col-span-1">
+        <dt class="text-sm font-medium text-gray-500">Added On</dt>
+        <dd class="mt-1 text-sm text-gray-900"><%= sender.created_at.strftime("%B %d, %Y") %></dd>
+      </div>
+    </dl>
+  </div>
+</div>

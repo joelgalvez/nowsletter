@@ -1,0 +1,58 @@
+<%= form_with(model: letter, class: "contents") do |form| %>
+  <% if letter.errors.any? %>
+    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3">
+      <h2><%= pluralize(letter.errors.count, "error") %> prohibited this letter from being saved:</h2>
+
+      <ul>
+        <% letter.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="my-5">
+    <%= form.label :venue_id, "Venue" %>
+    <%= form.select :venue_id, 
+        options_for_select(@venues.map { |v| [v.title, v.id] }, letter.venue_id),
+        { prompt: "Select a venue" },
+        class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :body %>
+    <%= form.text_area :body, rows: 4, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :uid %>
+    <%= form.text_field :uid, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+  </div>
+
+
+  <div class="my-5">
+    <%= form.label :subject %>
+    <%= form.text_field :subject, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :json %>
+    <%= form.text_area :json, rows: 4, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :sent_date %>
+    <%= form.datetime_field :sent_date, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :text_version, "Text Version" %>
+    <%= form.text_area :text_version, rows: 10, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full font-mono text-sm", 
+        placeholder: "Plain text version of the email content..." %>
+    <p class="text-sm text-gray-600 mt-1">This is the extracted plain text version used for parsing events. Image tags appear as [img]url[/img].</p>
+  </div>
+
+  <div class="inline">
+    <%= form.submit class: "rounded-lg py-3 px-5 bg-blue-600 text-white inline-block font-medium cursor-pointer" %>
+  </div>
+<% end %>

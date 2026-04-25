@@ -1,0 +1,21 @@
+<% content_for :title, "Countries" %>
+
+<div class="crud">
+  <% if notice.present? %>
+    <p class="flash-notice" id="notice"><%= notice %></p>
+  <% end %>
+
+  <div class="page-header">
+    <h1 class="page-title">Countries</h1>
+    <%= link_to "New country", new_country_path, class: "btn-primary" %>
+  </div>
+
+  <div id="countries" class="min-w-full">
+    <% @countries.each do |country| %>
+      <%= render country %>
+      <p>
+        <%= link_to "Show this country", country, class: "ml-2 btn-secondary" %>
+      </p>
+    <% end %>
+  </div>
+</div>

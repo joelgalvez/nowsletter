@@ -1,0 +1,29 @@
+<% content_for :title, "Blacklists" %>
+
+<div class="crud">
+  <% if notice.present? %>
+    <p class="flash-notice" id="notice"><%= notice %></p>
+  <% end %>
+
+  <div class="page-header">
+    <h1 class="page-title">Blacklists</h1>
+    <%= link_to "New blacklist", new_blacklist_path, class: "btn-primary" %>
+  </div>
+
+  <div id="blacklists" class="min-w-full divide-y divide-gray-200 space-y-5">
+    <% if @blacklists.any? %>
+      <% @blacklists.each do |blacklist| %>
+        <div class="flex flex-col sm:flex-row justify-between items-center pb-5 sm:pb-0">
+          <%= render blacklist %>
+          <div class="w-full sm:w-auto flex flex-col sm:flex-row gap-2">
+            <%= link_to "Show", blacklist, class: "btn-secondary" %>
+            <%= link_to "Edit", edit_blacklist_path(blacklist), class: "btn-secondary" %>
+            <%= button_to "Destroy", blacklist, method: :delete, class: "btn-danger", data: { turbo_confirm: "Are you sure?" } %>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <p class="text-center my-10">No blacklists found.</p>
+    <% end %>
+  </div>
+</div>

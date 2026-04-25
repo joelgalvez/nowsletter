@@ -1,0 +1,36 @@
+# Example controller showing different authorization patterns
+# This file demonstrates how to configure access control for different roles
+
+class ExampleController < ApplicationController
+  # Option 1: Allow specific roles for all actions
+  allow_roles :admin, :editor
+  
+  # Option 2: Allow specific roles for specific actions
+  allow_roles :editor, :parser, only: [:index, :show]
+  allow_roles :admin, only: [:new, :create, :edit, :update, :destroy]
+  
+  # Option 3: Allow all authenticated users (any role)
+  allow_all_authenticated_users only: [:public_action]
+  
+  # Option 4: Skip admin requirement without adding other restrictions
+  # (Inherits the default authentication requirement)
+  skip_before_action :require_admin_access, only: [:some_action]
+  
+  # Option 5: Mix with unauthenticated access
+  allow_unauthenticated_access only: [:totally_public]
+  skip_before_action :require_admin_access, only: [:totally_public]
+  
+  def index
+    # Accessible based on controller configuration
+  end
+  
+  def admin_only
+    # By default requires admin (no special configuration needed)
+  end
+  
+  # Helper methods available in controllers and views:
+  # - current_user_admin?
+  # - current_user_editor?
+  # - current_user_parser?
+  # - current_user (returns the User object)
+end

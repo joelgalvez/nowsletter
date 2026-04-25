@@ -1,0 +1,14 @@
+      <div class="" style="aspect-ratio:16/11;">
+        <% use_cache = local_assigns.fetch(:use_cache, true) %>
+        <% image_src = use_cache ? event.display_lead_image_thumbnail(600, 400) : event.lead_image %>
+        <% if image_src.present? %>
+          <img loading="lazy" src="<%= image_src %>" alt="" class="object-cover w-full h-full rounded-xl shadow-xl">
+        <% else %>
+            <div class="w-full h-full">
+              <svg viewBox="0 0 100 100" class="w-full h-full" preserveAspectRatio="none">
+                <line x1="2" y1="2" x2="96" y2="96" stroke="black" vector-effect="non-scaling-stroke" />
+                <line x1="96" y1="2" x2="2" y2="96" stroke="black" vector-effect="non-scaling-stroke" />
+              </svg>
+            </div>
+        <% end %>
+      </div>

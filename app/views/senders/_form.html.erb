@@ -1,0 +1,63 @@
+<%= form_with(model: sender) do |form| %>
+  <% if sender.errors.any? %>
+    <div id="error_explanation" class="bg-red-50 text-red-500 px-4 py-3 font-medium rounded-lg mb-6">
+      <h2 class="text-lg font-medium"><%= pluralize(sender.errors.count, "error") %> prohibited this sender from being saved:</h2>
+
+      <ul class="mt-2 list-disc list-inside">
+        <% sender.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="my-5">
+    <%= form.label :email %>
+    <%= form.text_field :email, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+  </div>
+
+
+
+  <div class="my-5" data-controller="venue-search">
+    <div class="mb-2">
+      <%= form.label :venue_id, "Venue" %>
+    </div>
+    
+    <div class="relative">
+      <!-- Hidden input to store the selected venue ID -->
+      <%= form.hidden_field :venue_id, data: { venue_search_target: "venueId" } %>
+      
+      <!-- Search input for venue -->
+      <input type="text" 
+             placeholder="Search for a venue..." 
+             class="block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full"
+             data-venue-search-target="input"
+             data-action="input->venue-search#search">
+      
+      <!-- Selected venue display -->
+      <div class="mt-2 inline-flex items-center px-3 py-2 rounded-md bg-gray-100 hidden" 
+           data-venue-search-target="selectedVenue">
+      </div>
+      
+      <!-- Clear venue button -->
+      <button type="button" 
+              class="absolute right-3 top-[1.35rem] text-gray-400 hover:text-gray-600"
+              data-action="click->venue-search#clearVenue">
+        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+        </svg>
+      </button>
+      
+      <!-- Results dropdown -->
+      <div class="absolute z-10 mt-1 w-full bg-white shadow-lg rounded-md border border-gray-200 max-h-60 overflow-y-auto hidden"
+           data-venue-search-target="results">
+        <!-- Results will be inserted here by JavaScript -->
+      </div>
+    </div>
+  </div>
+
+
+  <div class="mt-8 flex">
+    <%= form.submit class: "rounded-md py-2 px-5 bg-indigo-600 text-white font-medium cursor-pointer hover:bg-indigo-700 transition-colors shadow-sm flex items-center" %>
+  </div>
+<% end %>

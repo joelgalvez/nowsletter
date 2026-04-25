@@ -1,0 +1,60 @@
+<div style="font-size:14px;">
+  <% if @letter %>
+
+
+    <p style="margin-top:60px;">These <strong><%= @count %></strong> events are extracted from your newsletter <strong><%= @letter.subject %></strong>.</p>
+  <% end %>
+
+    <table style="border-collapse: collapse; width: 100%;">
+      <thead>
+        <tr style="background-color: #f3f4f6;">
+          <th style="border: 1px solid #e5e7eb; padding: 8px; text-align: left;">Title</th>
+          <th style="border: 1px solid #e5e7eb; padding: 8px; text-align: left;">Start Date</th>
+          <th style="border: 1px solid #e5e7eb; padding: 8px; text-align: left;">End Date</th>
+          <th style="border: 1px solid #e5e7eb; padding: 8px; text-align: left;">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @events.each do |event| %>
+          <tr>
+            <td style="border: 1px solid #e5e7eb; padding: 8px;"><%= event.title || 'Untitled Event' %></td>
+            <td style="border: 1px solid #e5e7eb; padding: 8px;">
+              <%= event.start_date ? event.start_date.strftime("%Y-%m-%d %H:%M") : 'Not set' %>
+            </td>
+            <td style="border: 1px solid #e5e7eb; padding: 8px;">
+              <%= event.end_date ? event.end_date.strftime("%Y-%m-%d %H:%M") : 'Not set' %>
+            </td>
+            <td style="border: 1px solid #e5e7eb; padding: 8px;"><%= event.status || 'unpublished' %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+  <% if @venue && @venue.users.count > 1 %>
+    <div style="margin-top: 40px;">
+      <p style="font-size: 14px; color: #374151; margin-bottom: 10px;">
+        <strong>This email is sent to the following contacts:</strong>
+      </p>
+      <ul style="list-style-type: disc; margin-left: 20px; margin-bottom: 15px;">
+        <% @venue.users.each do |user| %>
+          <li style="font-size: 14px; color: #374151; padding: 2px 0;">
+            <%= user.email_address %>
+            <% if user.role == 'admin' %>
+              <span style="color: #6b7280; font-size: 12px;">(admin)</span>
+            <% elsif user.role == 'editor' %>
+
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+      <p style="font-size: 14px; color: #374151;">
+        If someone should be removed or added, let me know. If you want to opt out personally, or for your whole organization, just reply to this email.
+      </p>
+    </div>
+
+  <% else %>
+      <p style="margin-top:40px;margin-top:20px;">
+        If you don't want any more emails like this, please just reply to this email and let me know.
+      </p>
+  <% end %>
+</div>

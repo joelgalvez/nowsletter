@@ -1,0 +1,7 @@
+<div class="p-2 text-2xl">
+← <%= link_to 'Home', root_path, class: 'cursor-pointer' %>
+</div>
+<div class="text container  max-w-[60rem] my-16 px-2 mx-auto text-xl">
+  <h2 class="text-4xl mb-8"><%= @page&.title %></h2>
+  <%= @page&.body %>
+</div>

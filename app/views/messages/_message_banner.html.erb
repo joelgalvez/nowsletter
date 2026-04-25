@@ -1,0 +1,31 @@
+<%
+  # Default values
+  can_close ||= 0
+  close_text ||= 'Close'
+  color ||= '000000'
+  big ||= 0
+  inverted ||= false
+
+  # Parse color to RGB
+  bg_color = inverted ? '#FFFFFF' : "##{color}"
+  border_color = inverted ? "##{color}" : 'transparent'
+
+%>
+
+<div
+  id="message-<%= id %>"
+  class="relative <%= big == 1 ? 'text-lg' : 'text-base' %> p-3 "
+>
+  <div class="text  <%= can_close == 1 ? 'pr-8' : 'pr-12' %>">
+    <%= raw text %>
+  </div>
+
+  <% if can_close == 1 %>
+    <button
+      class="absolute top-2 right-2 px-2 py-1 text-sm"
+      onclick="document.getElementById('message-<%= id %>').remove()"
+    >
+      <%= close_text %>
+    </button>
+  <% end %>
+</div>

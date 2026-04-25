@@ -1,0 +1,57 @@
+<div class="md:col-span-2">
+  <label class="block text-sm font-medium text-gray-700 mb-2">Tags</label>
+  <div class="bg-white shadow-sm rounded-md border border-gray-300 p-3 min-h-20" data-controller="tag-search">
+    <% if tags.any? %>
+      <!-- Tag search input -->
+      <div class="mb-3 relative">
+        <input 
+          type="text" 
+          placeholder="Search tags..."
+          class="block w-full shadow-sm rounded-md border border-gray-300 py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          data-tag-search-target="input"
+          data-action="input->tag-search#search"
+        >
+        <div 
+          class="absolute z-10 w-full mt-1 bg-white shadow-lg rounded-md border border-gray-300 hidden"
+          data-tag-search-target="results"
+        ></div>
+      </div>
+      
+      <!-- Selected Tags Container -->
+      <div class="flex flex-wrap gap-2" id="tags-container" data-tag-search-target="tagContainer">
+        <% venue.tags.each do |tag| %>
+          <div class="tag-item inline-flex items-center">
+            <label class="inline-flex items-center mx-1 cursor-pointer select-none tag-active">
+              <%= check_box_tag "venue[tag_ids][]", tag.id, true, 
+                    id: "venue_tag_ids_#{tag.id}", 
+                    class: "hidden" %>
+              <span class="tag-label inline-block px-3 py-1 text-sm bg-indigo-100 text-indigo-800 rounded-full shadow-sm hover:shadow-md transition-all duration-200">
+                <%= tag.title %>
+                <button type="button" class="ml-1 text-indigo-800 hover:text-indigo-900" data-action="click->tag-search#removeTag">&times;</button>
+              </span>
+            </label>
+          </div>
+        <% end %>
+        
+        <%# Add hidden input with empty value to handle case when no tags are selected %>
+        <%= hidden_field_tag "venue[tag_ids][]", nil %>
+      </div>
+      
+      <!-- Template for new tags -->
+      <template data-tag-search-target="template">
+        <div class="tag-item inline-flex items-center">
+          <label class="inline-flex items-center mx-1 cursor-pointer select-none tag-active">
+            <input type="checkbox" name="venue[tag_ids][]" class="hidden">
+            <span class="tag-label inline-block px-3 py-1 text-sm bg-indigo-100 text-indigo-800 rounded-full shadow-sm hover:shadow-md transition-all duration-200">
+              <!-- Tag title will be inserted here -->
+              <button type="button" class="ml-1 text-indigo-800 hover:text-indigo-900" data-action="click->tag-search#removeTag">&times;</button>
+            </span>
+          </label>
+        </div>
+      </template>
+    <% else %>
+      <p class="text-gray-500 text-sm">No tags available. <a href="<%= new_tag_path %>" class="text-indigo-600 hover:text-indigo-900">Create some tags</a> first.</p>
+    <% end %>
+  </div>
+  <p class="mt-1 text-sm text-gray-500">Search and select tags that apply to this venue</p>
+</div>

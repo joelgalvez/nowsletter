@@ -1,0 +1,16 @@
+<% content_for :title, "Showing setting" %>
+
+<%= turbo_frame_tag "setting_#{@setting.id}", class: "contents" do %>
+  <div class="index-row grid grid-cols-[3fr_2fr_2fr_1fr] bg-white hover:bg-gray-50 transition-colors">
+    <div class="index-td text-gray-500 text-sm"><%= @setting.description %></div>
+    <div class="index-td">
+      <div class="index-td-text font-medium"><%= @setting.name %></div>
+    </div>
+    <div class="index-td">
+      <div class="index-td-text text-gray-600"><%= @setting.value %></div>
+    </div>
+    <div class="index-td text-right">
+      <%= link_to "Edit", edit_setting_path(@setting), class: "text-indigo-600 hover:text-indigo-900" %>
+    </div>
+  </div>
+<% end %>

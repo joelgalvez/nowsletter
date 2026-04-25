@@ -1,0 +1,64 @@
+<%= turbo_frame_tag "subscriber_form" do %>
+  <div data-controller="subscribe-form" data-subscribe-form-folded-value="false" style="visibility: hidden;">
+    <!-- Backdrop -->
+    <div
+      class="fixed w-full h-screen bg-[rgba(0,0,0,0.5)] top-0 left-0 transition-opacity duration-300 z-10 overscroll-contain"
+      style="opacity: 0; pointer-events: none;"
+      data-subscribe-form-target="backdrop"
+      data-action="click->subscribe-form#fold"
+    ></div>
+
+    <!-- Form Container -->
+    <div
+      class="fixed w-full left-0  text-white transition-all duration-300 z-20 overflow-clip cursor-pointer"
+      style="height: 3rem; top: calc(100vh - 3rem); "
+      data-subscribe-form-target="container"
+      data-action="click->subscribe-form#handleContainerClick"
+    >
+      <div class="h-[50vh] bg-red-400 transition-all duration-300" data-subscribe-form-target="content">
+        <!-- Toggle Arrow Button -->
+        <button
+          type="button"
+          class="absolute top-2 right-2 w-8 h-8 flex items-center justify-center text-white hover:drop-shadow-[0_0_3px_white] rounded transition cursor-pointer"
+          data-action="click->subscribe-form#toggle"
+          data-subscribe-form-target="arrow"
+        >
+          <svg class="w-6 h-6 transition-transform duration-300" style="transform: rotate(180deg);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+
+        <%= form_with(model: subscriber, url: subscribers_path, method: :post, class: "h-full") do |form| %>
+          <div class="container max-w-[40rem] mx-auto p-2 h-full justify-center">
+
+            <div class="">
+              <div class="text-center mb-4">
+                <h3 class="text-lg font-semibold mb-2 px-6 pt-[0.125rem]">Updates every Thursday</h3>
+                <h3 class="text-lg text-white mb-2">This is a non-public preview of my upcoming weekly newsletter with things to do in the arts in and around Amsterdam.</h3>
+              </div>
+
+              <% if subscriber.errors.any? %>
+                <div class="bg-red-50 border border-red-200 text-red-800 px-3 py-2 rounded text-sm mb-4">
+                  <ul class="list-disc list-inside">
+                    <% subscriber.errors.full_messages.each do |message| %>
+                      <li><%= message %></li>
+                    <% end %>
+                  </ul>
+                </div>
+              <% end %>
+
+              <div class="flex flex-col sm:flex-row gap-4 w-full justify-center items-center mb-4">
+                <%= form.email_field :email, required: true, class: "w-full sm:max-w-[20rem] px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black", placeholder: "your@email.com" %>
+                <%= form.submit "Subscribe", class: "w-full sm:max-w-[10rem] bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition cursor-pointer" %>
+              </div>
+            </div>
+
+            <%# <h3 class="text-sm text-white mb-2 text-center ">Later, you'll be able to filter on places, tags, location, etc.<br>I'll get to that eventually.</h3> %>
+
+          </div>
+        <% end %>
+
+      </div>
+    </div>
+  </div>
+<% end %>

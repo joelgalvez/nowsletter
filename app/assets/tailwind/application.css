@@ -1,0 +1,326 @@
+@import "tailwindcss";
+
+html {
+  overflow-y: scroll;
+}
+
+/* Custom styles for sortable columns */
+.sortable-column {
+  @apply cursor-pointer transition-colors rounded-md;
+}
+
+th:hover .sortable-column {
+  @apply bg-gray-100;
+}
+
+/* Venue search component */
+.venue-search-result {
+  @apply transition-colors cursor-pointer;
+}
+
+.venue-search-result:hover {
+  @apply bg-indigo-50;
+}
+
+.venue-search-selected {
+  @apply flex items-center gap-2 px-3 py-1.5 bg-indigo-50 text-indigo-700 rounded-md;
+}
+
+.popup {}
+
+.popup:empty {
+  @apply hidden;
+}
+
+/* 
+@font-face {
+  font-family: "apfel";
+  font-weight: 400;
+  src: url("ApfelGrotezk-Regular.woff2") format("woff2");
+}
+@font-face {
+  font-family: "apfel";
+  font-weight: 500;
+  src: url("ApfelGrotezk-Mittel.woff2") format("woff2");
+}
+@font-face {
+  font-family: "apfel";
+  font-weight: 600;
+  src: url("ApfelGrotezk-Fett.woff2") format("woff2");
+} */
+
+.underline {
+  /* text-decoration: underline;
+  text-decoration-thickness: clamp(2.5px, 0.1em, 5px);
+  text-underline-offset: clamp(2.5px, 0.1em, 5px); */
+}
+
+body {
+  /* font-family: 'apfel'; */
+  font-family: 'Helvetica', Arial, 'Helvetica Neue', sans-serif;
+}
+
+.banner {
+  text-shadow: 0 0 1rem #ffe223;
+  @apply text-red-400;
+}
+
+/* ActionText styles - imported via application layout */
+
+.tag-button {
+  @apply inline-block px-2 py-[0.1rem] bg-gray-200 rounded-lg shadow-md m-1;
+}
+
+.tag-button-small {
+
+  @apply text-sm inline-block px-1 py-[0.05rem] bg-gray-200 rounded-lg shadow-md m-1;
+}
+
+.tag-button-big {
+  @apply inline-block py-2 px-5 bg-gray-200 rounded-lg shadow-md m-1;
+}
+
+
+.tag-button-big.active,
+.tag-button-big:hover,
+.tag-button-small.active,
+.tag-button-small:hover,
+.tag-button.active,
+.tag-button:hover {
+  @apply bg-red-400 text-white;
+}
+
+.text br {
+  @apply mt-4;
+}
+
+.text a {
+  @apply underline;
+  transition: text-shadow 0.2s;
+}
+
+.text a:hover {
+  /* @apply text-white/80; */
+  /* text-shadow: 0 0 1rem #fe8383; */
+  opacity: 0.7;
+}
+
+.text h2 {
+  @apply text-5xl font-bold;
+}
+
+.text .trix-content h1 {
+  @apply text-3xl font-bold mb-2 mt-4;
+}
+
+.trix-content {
+  line-height: 1.3;
+}
+
+.trix-content .attachment img {
+  max-width: 50rem;
+  @apply mx-auto shadow-2xl rounded-xl;
+}
+
+.trix-content .attachment {
+  @apply my-8;
+
+}
+
+.trix-content .attachment--preview .attachment__caption {
+  @apply text-center !text-sm !text-black my-2;
+}
+
+/* Elegant details/summary styling */
+details.elegant-details {
+  @apply border border-gray-300 rounded-lg my-4 overflow-hidden text-sm;
+}
+
+details.elegant-details summary {
+  @apply px-4 py-3 cursor-pointer select-none transition-colors relative;
+  list-style: none;
+}
+
+details.elegant-details summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Plus/minus indicator */
+details.elegant-details summary::before {
+  content: '+';
+  @apply absolute left-4 text-gray-600 font-mono text-lg leading-none;
+  transition: transform 0.2s ease;
+}
+
+details.elegant-details[open] summary::before {
+  content: '−';
+}
+
+/* Content styling */
+details.elegant-details>*:not(summary) {
+  @apply px-4 py-3 border-t border-gray-200;
+}
+
+/* Optional: Animated version with rotating indicator */
+details.elegant-details-animated summary::before {
+  content: '+';
+  @apply absolute left-4 text-gray-600 font-mono text-2xl leading-none;
+  transition: transform 0.3s ease;
+}
+
+
+/* Alternative style with chevron */
+details.elegant-details-chevron summary {
+  @apply px-4 py-3 cursor-pointer select-none transition-colors relative pl-10;
+  list-style: none;
+}
+
+details.elegant-details-chevron summary::before {
+  content: '+';
+  @apply absolute left-4 text-gray-600;
+  transition: transform 0.2s ease;
+}
+
+/* Elegant details/summary styling */
+details.text {
+  @apply my-8;
+}
+
+details.text summary {
+  @apply cursor-pointer select-none;
+  list-style: none;
+}
+
+details.text summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Plus/minus indicator */
+details.text summary::before {
+  content: '+ ';
+  @apply font-mono;
+  transition: transform 0.2s ease;
+}
+
+details.text[open] summary::before {
+  content: '− ';
+}
+
+/* Content styling */
+details.text>*:not(summary) {
+  @apply px-4 py-3 border-t border-gray-200;
+}
+
+.text p+p {
+  @apply mt-2;
+
+}
+/* ── CRUD index shared components ── */
+
+.flash-notice {
+  @apply py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block;
+}
+
+.page-header {
+  @apply flex justify-between items-center mb-6;
+}
+
+.page-title {
+  @apply font-bold text-4xl;
+}
+
+.btn-primary {
+  @apply rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-medium;
+}
+
+.btn-primary-indigo {
+  @apply rounded-md py-3 px-5 bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition-colors shadow-sm flex items-center;
+}
+
+.btn-secondary {
+  @apply w-full sm:w-auto text-center rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium;
+}
+
+.btn-danger {
+  @apply w-full sm:w-auto rounded-md px-3.5 py-2.5 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer;
+}
+
+.crud {
+  @apply px-4 py-16;
+}
+
+.index-card {
+  @apply bg-white rounded-xl shadow-md overflow-hidden;
+}
+
+.index-card-header {
+  @apply sm:flex sm:items-center p-6 bg-gray-50 border-b border-gray-200;
+}
+
+.index-table {
+  @apply min-w-full;
+}
+
+.index-row {
+  @apply grid items-center border-b border-gray-200;
+}
+
+.index-row-header {
+  @apply bg-gray-50;
+}
+
+.index-th {
+  @apply px-6 py-3 text-left;
+}
+
+.index-th-label {
+  @apply px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider;
+}
+
+.index-td {
+  @apply px-6 py-2;
+}
+
+.index-td-text {
+  @apply text-sm font-medium text-gray-900;
+}
+
+.index-td-muted {
+  @apply px-6 py-4 text-sm text-gray-500;
+}
+
+.badge {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+}
+
+.badge-green {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800;
+}
+
+.badge-red {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800;
+}
+
+.badge-blue {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800;
+}
+
+.badge-purple {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800;
+}
+
+.badge-gray {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800;
+}
+
+.badge-count {
+  @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 text-indigo-800;
+}
+
+.action-link {
+  @apply text-indigo-600 hover:text-indigo-900 px-2 py-1 rounded hover:bg-indigo-50 transition-colors;
+}
+
+.action-link-secondary {
+  @apply text-gray-600 hover:text-gray-900 px-2 py-1 rounded hover:bg-gray-50 transition-colors;
+}

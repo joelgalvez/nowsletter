@@ -1,0 +1,79 @@
+/*
+ * This is a manifest file that'll be compiled into application.css.
+ *
+ * With Propshaft, assets are served efficiently without preprocessing steps. You can still include
+ * application-wide styles in this file, but keep in mind that CSS precedence will follow the standard
+ * cascading order, meaning styles declared later in the document or manifest will override earlier ones,
+ * depending on specificity.
+ *
+ * Consider organizing styles into separate files for maintainability.
+ */
+
+/* Kaminari pagination */
+nav.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+nav.pagination a,
+nav.pagination span.current {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  height: 2rem;
+  padding: 0 0.5rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  background: white;
+}
+
+nav.pagination a:hover {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+}
+
+nav.pagination span.current {
+  background: #4f46e5;
+  color: white;
+  border-color: #4f46e5;
+}
+
+nav.pagination span.gap {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 0.25rem;
+  color: #6b7280;
+}
+
+nav.pagination .first a,
+nav.pagination .prev a,
+nav.pagination .next a,
+nav.pagination .last a {
+  border: none;
+  color: #4f46e5;
+  background: transparent;
+}
+
+nav.pagination .first a:hover,
+nav.pagination .prev a:hover,
+nav.pagination .next a:hover,
+nav.pagination .last a:hover {
+  background: #eef2ff;
+}
+
+nav.pagination .prev.disabled span,
+nav.pagination .next.disabled span,
+nav.pagination .first.disabled span,
+nav.pagination .last.disabled span {
+  border: none;
+  color: #9ca3af;
+  background: transparent;
+  cursor: default;
+}

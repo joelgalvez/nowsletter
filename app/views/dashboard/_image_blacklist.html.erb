@@ -1,0 +1,22 @@
+<div id="image_blacklist_section" class="grid grid-cols-6 gap-2" data-controller="image-blacklist" data-image-blacklist-letter-id-value="<%= letter&.id %>">
+	<% blacklisted_urls = Blacklist.pluck(:url) %>
+	<% images.each_with_index do |img_url, index| %>
+		<div class="relative group">
+			<%= image_tag img_url,
+				class: "w-full h-full object-contain cursor-pointer transition-all duration-200 border border-gray-200 rounded #{blacklisted_urls.include?(img_url) ? 'opacity-30 grayscale' : ''}",
+				style: "aspect-ratio: 1/1;",
+				alt: "Image #{index + 1}",
+				data: {
+					action: "click->image-blacklist#toggle",
+					url: img_url,
+					"image-blacklist-target": "image",
+					blacklisted: blacklisted_urls.include?(img_url)
+				} %>
+			<% if blacklisted_urls.include?(img_url) %>
+				<div class="absolute inset-0 flex items-center justify-center pointer-events-none blacklist-label">
+					<span class="bg-red-600 text-white px-2 py-1 rounded text-xs font-bold">BLACKLISTED</span>
+				</div>
+			<% end %>
+		</div>
+	<% end %>
+</div>

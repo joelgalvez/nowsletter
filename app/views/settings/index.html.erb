@@ -1,0 +1,59 @@
+<% content_for :title, "Settings" %>
+
+<div class="crud">
+  <% if notice.present? %>
+    <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-md inline-block" id="notice"><%= notice %></p>
+  <% end %>
+
+  <div class="page-header">
+    <h1 class="text-3xl font-bold">Settings</h1>
+    <div class="flex gap-2">
+<%= button_to "Test notification email", test_system_notification_settings_path, method: :post, class: "btn-secondary" %>
+      <%= link_to "New setting", new_setting_path, class: "btn-primary" %>
+    </div>
+  </div>
+
+  <div class="index-card">
+    <div class="index-card-header">
+      <div class="sm:flex-auto">
+        <p class="text-sm text-gray-600">Application settings stored in the database.</p>
+      </div>
+      <div class="mt-4 sm:mt-0 sm:flex-none flex items-center gap-4">
+        <%= render "shared/search_form", url: settings_path, query: @query, placeholder: "Search settings...", frame_id: "settings_list", sort: @sort, direction: @direction %>
+        <span class="badge-count"><%= pluralize(@settings.total_count, 'setting') %></span>
+      </div>
+    </div>
+
+    <%= turbo_frame_tag "settings_list" do %>
+      <div class="index-table overflow-x-auto">
+        <div class="index-row index-row-header grid grid-cols-[3fr_2fr_2fr_1fr]">
+          <div class="index-th-label">Description</div>
+          <div class="index-th"><%= sortable "name", "Name", frame: "settings_list" %></div>
+          <div class="index-th"><%= sortable "value", "Value", frame: "settings_list" %></div>
+          <div class="index-th-label text-right">Actions</div>
+        </div>
+
+        <% if @settings.present? %>
+          <% @settings.each do |setting| %>
+            <%= render "row", setting: setting %>
+          <% end %>
+        <% else %>
+          <div class="px-6 py-8 text-center text-gray-500 bg-white">
+            <% if @query.present? %>
+              No settings found matching "<%= @query %>".
+              <%= link_to "Clear search", settings_path(sort: @sort, direction: @direction), data: { turbo_frame: "settings_list" }, class: "text-indigo-600 hover:text-indigo-900" %>.
+            <% else %>
+              No settings found.
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+
+      <% if @settings.total_pages > 1 %>
+        <div class="mt-4 flex justify-center pb-4">
+          <%= paginate @settings, params: { sort: @sort, direction: @direction, query: @query } %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</div>

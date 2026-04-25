@@ -1,0 +1,67 @@
+<div class="max-w-4xl mx-auto px-4 py-8">
+  <div class="mb-6">
+    <h1 class="text-3xl font-bold">Import Preview</h1>
+    <p class="text-gray-600 mt-2">Review and edit events before importing</p>
+  </div>
+
+  <%= form_with(url: import_confirm_path, method: :post, local: true) do |form| %>
+    <div class="space-y-6">
+      <% @preview_events.each_with_index do |event, index| %>
+        <div class="bg-white shadow rounded-lg p-6">
+          <h3 class="text-lg font-semibold mb-4">Event <%= index + 1 %></h3>
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Venue</label>
+              <%= form.select "events[#{index}][venue_id]",
+                  options_from_collection_for_select(@venues, :id, :title, event[:venue_id]),
+                  { include_blank: "- Select venue -" },
+                  class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" %>
+              <% if event[:venue_name].present? %>
+                <p class="mt-1 text-sm text-gray-500">From JSON: "<%= event[:venue_name] %>"</p>
+              <% end %>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Title</label>
+              <%= form.text_field "events[#{index}][title]",
+                  value: event[:title],
+                  class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" %>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Start Date/Time</label>
+                <%= form.text_field "events[#{index}][start_date]",
+                    value: event[:start_date],
+                    class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" %>
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">End Date/Time</label>
+                <%= form.text_field "events[#{index}][end_date]",
+                    value: event[:end_date],
+                    class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" %>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Tags</label>
+              <%= form.select "events[#{index}][tag_ids]",
+                  options_from_collection_for_select(@tags, :id, :title, @tags.select { |t| event[:tags].include?(t.title) }.map(&:id)),
+                  {},
+                  multiple: true,
+                  class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" %>
+              <p class="mt-1 text-sm text-gray-500">Current: <%= event[:tags].join(", ") %></p>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="flex justify-between pt-6 mt-6 border-t">
+      <%= link_to "Back", import_path, class: "px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50" %>
+      <%= form.submit "Confirm Import", class: "px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 cursor-pointer" %>
+    </div>
+  <% end %>
+</div>

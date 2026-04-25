@@ -1,0 +1,62 @@
+<tr class="hover:bg-gray-50 transition-colors">
+  <td class="px-6 py-4">
+    <div class="text-sm font-medium text-gray-900"><%= truncate(event.title, length: 50) %></div>
+    <% if event.city.present? %>
+      <div class="text-xs text-gray-500"><%= event.city.name %></div>
+    <% end %>
+  </td>
+  <td class="px-6 py-4 whitespace-nowrap">
+    <% if event.venue.present? %>
+      <%= link_to event.venue.title, venue_path(event.venue), class: "text-sm text-indigo-600 hover:text-indigo-900" %>
+    <% else %>
+      <span class="text-sm text-gray-400">No venue</span>
+    <% end %>
+  </td>
+  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+    <% if event.start_date.present? %>
+      <%= event.start_date.strftime("%Y-%m-%d %H:%M") %>
+    <% else %>
+      <span class="text-gray-400">-</span>
+    <% end %>
+  </td>
+  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+    <% if event.end_date.present? %>
+      <%= event.end_date.strftime("%Y-%m-%d %H:%M") %>
+    <% else %>
+      <span class="text-gray-400">-</span>
+    <% end %>
+  </td>
+  <td class="px-6 py-4 whitespace-nowrap">
+    <% if event.status == "published" %>
+      <span class="px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+        Published
+      </span>
+    <% else %>
+      <span class="px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+        <%= event.status&.capitalize || "Draft" %>
+      </span>
+    <% end %>
+  </td>
+  <td class="px-6 py-4">
+    <div class="flex flex-wrap gap-1">
+      <% event.tags.limit(3).each do |tag| %>
+        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+          <%= tag.title %>
+        </span>
+      <% end %>
+      <% if event.tags.count > 3 %>
+        <span class="text-xs text-gray-500">+<%= event.tags.count - 3 %></span>
+      <% end %>
+      <% if event.tags.empty? %>
+        <span class="text-gray-400 text-xs">No tags</span>
+      <% end %>
+    </div>
+  </td>
+  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+    <% if event.letter_id.present? %>
+      <%= link_to "Edit", dashboard_letter_path(event.letter_id, anchor: "event_#{event.id}"), class: "text-indigo-600 hover:text-indigo-900 px-2 py-1 rounded hover:bg-indigo-50 transition-colors" %>
+    <% else %>
+      <%= link_to "Edit", edit_event_path(event), class: "text-indigo-600 hover:text-indigo-900 px-2 py-1 rounded hover:bg-indigo-50 transition-colors" %>
+    <% end %>
+  </td>
+</tr>

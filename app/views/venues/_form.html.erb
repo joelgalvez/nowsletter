@@ -1,0 +1,63 @@
+<%= form_with(model: venue) do |form| %>
+  <% if venue.errors.any? %>
+    <div id="error_explanation" class="bg-red-50 text-red-500 px-4 py-3 font-medium rounded-lg mb-6">
+      <h2 class="text-lg font-medium"><%= pluralize(venue.errors.count, "error") %> prohibited this venue from being saved:</h2>
+
+      <ul class="mt-2 list-disc list-inside">
+        <% venue.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+    <div>
+      <%= form.label :title, class: "block text-sm font-medium text-gray-700" %>
+      <%= form.text_field :title, class: "mt-1 block w-full shadow-sm rounded-md border border-gray-300 py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
+    </div>
+
+    <div>
+      <%= form.label :website, class: "block text-sm font-medium text-gray-700" %>
+      <%= form.text_field :website, placeholder: "example.com", class: "mt-1 block w-full shadow-sm rounded-md border border-gray-300 py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
+    </div>
+
+    <div>
+      <%= form.label :code, class: "block text-sm font-medium text-gray-700" %>
+      <%= form.text_field :code, 
+    value: @venue.code.presence || SecureRandom.alphanumeric(8).downcase,
+    class: "mt-1 block w-full shadow-sm rounded-md border border-gray-300 py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
+    </div>
+
+    <div class="md:col-span-2">
+      <div class="flex items-center">
+        <%= form.check_box :opt_in, class: "h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" %>
+        <%= form.label :opt_in, "Opt In", class: "ml-2 block text-sm font-medium text-gray-700" %>
+      </div>
+      <p class="mt-1 text-sm text-gray-500">Opt in to this project</p>
+    </div>
+
+    <div class="md:col-span-2">
+      <div class="flex items-center">
+        <%= form.check_box :accept_help, class: "h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" %>
+        <%= form.label :accept_help, "Accept Help", class: "ml-2 block text-sm font-medium text-gray-700" %>
+      </div>
+      <p class="mt-1 text-sm text-gray-500">Also accept to get help with editing and corrections</p>
+    </div>
+
+    <div class="md:col-span-2">
+      <div class="flex items-center">
+        <%= form.check_box :checked, class: "h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" %>
+        <%= form.label :checked, "Checked", class: "ml-2 block text-sm font-medium text-gray-700" %>
+      </div>
+      <p class="mt-1 text-sm text-gray-500">Newsletter is checked and confirmed. Future newsletters are processed automatically.</p>
+    </div>
+
+    <!-- Tag selector -->
+    <%= render 'tag_selector', venue: venue, tags: @tags %>
+  </div>
+
+  <div class="mt-8 flex justify-end">
+    <%= form.submit class: "rounded-md py-2 px-4 bg-indigo-600 text-white font-medium cursor-pointer hover:bg-indigo-700 transition-colors shadow-sm" %>
+  </div>
+<% end %>

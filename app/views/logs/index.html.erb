@@ -1,0 +1,72 @@
+<% content_for :title, "Logs" %>
+
+<div class="crud">
+  <% if notice.present? %>
+    <p class="flash-notice" id="notice"><%= notice %></p>
+  <% end %>
+
+  <div class="page-header">
+    <h1 class="page-title">Logs</h1>
+    <div class="flex items-center gap-4">
+      <%= render "shared/search_form", url: logs_path, query: @query, placeholder: "Search logs...", frame_id: "logs_list", sort: nil, direction: nil %>
+      <%= link_to "New log", new_log_path, class: "btn-primary" %>
+    </div>
+  </div>
+
+  <div id="logs" class="w-full">
+    <%= turbo_frame_tag "logs_list" do %>
+    <% if @logs.any? %>
+      <div class="index-table overflow-x-auto">
+        <div class="index-row index-row-header grid grid-cols-[2fr_1fr_1fr_2fr_2fr_1fr_1fr_1fr]">
+          <div class="index-th-label">Title</div>
+          <div class="index-th-label">Venue</div>
+          <div class="index-th-label">Event</div>
+          <div class="index-th-label">Letter</div>
+          <div class="index-th-label">User</div>
+          <div class="index-th-label whitespace-nowrap">Shown for role</div>
+          <div class="index-th-label">Severity</div>
+          <div class="index-th-label">Actions</div>
+        </div>
+
+        <% @logs.each do |log| %>
+          <div class="index-row grid grid-cols-[2fr_1fr_1fr_2fr_2fr_1fr_1fr_1fr] bg-white hover:bg-gray-50 transition-colors" id="<%= dom_id log %>">
+            <div class="index-td text-sm"><%= log.title %></div>
+            <div class="index-td text-sm truncate" title="<%= log.venue&.title %>"><%= log.venue&.title&.truncate(20) || "-" %></div>
+            <div class="index-td text-sm truncate" title="<%= log.event&.title %>"><%= log.event&.title&.truncate(20) || "-" %></div>
+            <div class="index-td text-sm"><%= log.letter ? log.letter.subject.to_s.truncate(30) : "-" %></div>
+            <div class="index-td text-sm <%= 'text-blue-600' if log.user&.admin? %>"><%= log.user&.email_address || "-" %></div>
+            <div class="index-td">
+              <span class="<%= log.role == 'admin' ? 'badge-blue' : 'badge-green' %>">
+                <%= log.role %>
+              </span>
+            </div>
+            <div class="index-td">
+              <span class="<%= log.severity == 'high' ? 'badge-red' : 'badge-green' %>">
+                <%= log.severity %>
+              </span>
+            </div>
+            <div class="index-td text-sm">
+              <div class="flex gap-2">
+                <%= link_to "Show", log, class: "text-blue-600 hover:text-blue-900" %>
+                <%= link_to "Edit", edit_log_path(log), class: "text-indigo-600 hover:text-indigo-900" %>
+                <%= button_to "Delete", log, method: :delete, class: "text-red-600 hover:text-red-900", data: { turbo_confirm: "Are you sure?" } %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="text-center my-10">No logs found.</p>
+    <% end %>
+
+    <% if @logs.total_pages > 1 %>
+      <div class="mt-8 flex justify-center">
+        <%= paginate @logs %>
+      </div>
+      <div class="text-center mt-2 text-sm text-gray-500">
+        Showing <%= @logs.offset_value + 1 %> - <%= [@logs.offset_value + @logs.size, @logs.total_count].min %> of <%= @logs.total_count %> logs
+      </div>
+    <% end %>
+    <% end %>
+  </div>
+</div>

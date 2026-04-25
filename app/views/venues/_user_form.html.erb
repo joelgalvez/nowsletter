@@ -1,0 +1,54 @@
+<div class="mb-4 pb-4 border-b border-gray-200 last:border-0 flex gap-4 w-full" id="user_<%= user.id || 'new' %>">
+  <%= form_with(model: user, local: true, html: {
+      class: "grid grid-cols-1 md:grid-cols-[1fr_auto] gap-4 w-full",
+      data: {
+        controller: "user-form",
+        action: "submit->user-form#showFeedback"
+      }
+    }) do |form| %>
+    <%= form.hidden_field :venue_id %>
+    <%= form.hidden_field :role, value: "editor" %>
+    <%= hidden_field_tag :redirect_to_venue, true %>
+    
+    <div>
+      <% if user.email_address.present? && !user.persisted? %>
+        <%= form.hidden_field :email_address %>
+        <span class="block px-3 py-2 text-sm text-gray-700"><%= user.email_address %></span>
+      <% else %>
+        <%= form.email_field :email_address,
+            class: "block shadow rounded-md border border-gray-300 outline-none px-3 py-2 w-full",
+            placeholder: "Email address",
+            data: { user_form_target: "email" } %>
+      <% end %>
+    </div>
+    
+    <% if !user.persisted? %>
+      <%= form.hidden_field :password, value: SecureRandom.hex(16) %>
+    <% end %>
+    
+    <div class="flex items-center gap-2">
+      <% if user.persisted? %>
+        <%= form.submit "Update", 
+            class: "bg-indigo-600 hover:bg-indigo-700 text-white text-sm py-1 px-3 rounded shadow-sm transition-colors",
+            data: { user_form_target: "submitButton" } %>
+        <span class="hidden text-green-600 text-sm font-medium" data-user-form-target="feedback">
+          ✓ Updated
+        </span>
+      <% else %>
+        <%= form.submit "Add User", 
+            class: "bg-indigo-600 hover:bg-indigo-700 text-white text-sm py-1 px-3 rounded shadow-sm transition-colors",
+            data: { user_form_target: "submitButton" } %>
+      <% end %>
+    </div>
+  <% end %>
+  
+  <% if user.persisted? %>
+    <div class="mt-2">
+      <%= button_to "Delete", 
+          user_path(user, redirect_to_venue: true), 
+          method: :delete, 
+          data: { turbo_confirm: "Are you sure you want to delete this user?" },
+          class: "bg-red-600 hover:bg-red-700 text-white text-sm py-1 px-3 rounded shadow-sm transition-colors" %>
+    </div>
+  <% end %>
+</div>

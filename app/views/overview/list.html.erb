@@ -1,0 +1,84 @@
+<% @list.messages.order(:order).each do |message| %>
+	<%= render partial: 'messages/message_banner', locals: {id: message.id, text: message.body, can_close: message.can_close, close_text: message.close_text, color: message.color, big: message.big} %>
+<% end %>
+
+<div class="m-1">
+		<div class="mb-1">
+			<div class="float-right w-10 h-10 "></div>
+						
+			<%= link_to 'All countries', request.path, class: "tag-button-big #{params[:country_code].nil? && params[:tags].nil? && params[:city].nil? ? 'active' : ''}" %>
+
+			<% @countries.each do |country| %>
+				<% if country.valid_country? %>
+					<%= link_to country.country_code, {:controller => "overview", :action => "list", country_code: country.country_code}, class: "tag-button-big shrink-0 " + (country.country_code == params[:country_code] ? "active" : "") %>
+				<% end %>
+			<% end %>
+			
+		</div>
+		<% unless @cities.nil? %>
+			<div class="">
+				<% @cities.each do |city| %>
+					<% unless city.nil?  %>
+						<%= link_to city.name, {:controller => "overview", :action => "list", city: city.name, country_code: params[:country_code]}, class: "tag-button shrink-0 " +  (city.name == params[:city] ? 'active': '') %>
+					<% end %>
+				<% end %>			
+			</div>
+		<% end %>
+	</div>
+
+	<% unless @tags.empty? %>
+		<div class="w-full h-[1px] bg-black my-1"></div>
+	<% end %>
+
+</div>
+
+
+<% unless @tags.empty? %>
+	<div 
+		class="w-full overflow-hidden"
+		hx-boost="true"
+		class="leading-tight mb-4"
+	>
+		<div class="w-full relative">
+			<div class="m-1 flex overflow-x-auto px-1">
+				<%= link_to 'All tags', {:controller => "overview", :action => "list", city: params[:city], country_code: params[:country_code]}, class: "shrink-0 tag-button #{params[:tag].nil? ? 'active' : ''}"%>
+				<% @tags.each do |tag| %>
+					<%= link_to tag.title, {:controller => "overview", :action => "list", :tag => tag.title, city: params[:city], country_code: params[:country_code]}, class: "shrink-0 tag-button #{params[:tag] == tag.title ? 'active' : ''}"%>
+				<% end %>
+			</div>
+			<%# <div class="absolute top-0 right-0 w-12 h-full " style="background:linear-gradient(to-right, #FFFFFF00, #FFFFFFFF)"></div> %>
+			<div class="absolute top-0 right-0 w-[4rem] h-full pointer-events-none " style="background: linear-gradient(to right, #FFFFFF00, #FFFFFFFF);"></div>
+		</div>
+	</div>
+<% end %>
+
+
+
+<% unless @eventsOngoing.blank? %>
+	<div class="my-8 py-4 bg-yellow-100 relative" >
+		<div class="">
+			<h2 class="px-2 text-3xl my-2 lg:px-12">Ongoing</h2>
+		</div>
+		<div class="relative">
+			<div class="flex gap-4 px-2 lg:px-12 w-full overflow-y-auto pb-2 mb-2" >
+				<% @eventsOngoing&.each do |event| %>
+					<div class="w-[12rem] shrink-0">
+						<%= render 'event', event: event %>
+					</div>
+				<% end %>
+			</div>
+		</div>
+
+		<div class="absolute right-0 top-0 w-16 lg:w-[10rem] h-full bg-gradient-to-r from-transparent to-yellow-100 pointer-events-none">
+			
+		</div>
+	</div>
+<% end %>
+<% unless @events.blank? %>
+	<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 px-2" >
+		<% @events.each do |event| %>
+			<%= render 'event', event: event %>
+		<% end %>
+	</div>
+
+<% end %>

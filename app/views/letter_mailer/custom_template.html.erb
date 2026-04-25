@@ -1,0 +1,29 @@
+<div style="font-size:18px;">
+  <%
+    login_link = if @login_token && @letter
+      link_to("Go to dashboard", dashboard_letter_url(@letter.id, token: @login_token), style: "")
+    else
+      ""
+    end
+    opt_out_link = if @login_token
+      link_to("Opt out", opt_out_url(token: @login_token), style: "")
+    else
+      ""
+    end
+    opt_in_link = if @login_token && @letter
+      link_to("Opt in", dashboard_letter_url(@letter.id, token: @login_token, accept_help: 1, opt_in: 1), style: "")
+    else
+      ""
+    end
+    rendered_body = h(@body.to_s).to_str
+                     .gsub(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/) { %(<a href="#{$2}">#{$1}</a>) }
+                     .gsub("{login}", login_link.to_s)
+                     .gsub("{opt-out}", opt_out_link.to_s)
+                     .gsub("{opt-in}", opt_in_link.to_s)
+  %>
+  <div style="white-space: pre-wrap; margin-bottom: 30px;"><%= rendered_body.html_safe %></div>
+
+  <% if @events.any? %>
+    <%= render partial: 'extracted_events' %>
+  <% end %>
+</div>

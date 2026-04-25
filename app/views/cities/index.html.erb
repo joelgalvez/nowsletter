@@ -1,0 +1,21 @@
+<% content_for :title, "Cities" %>
+
+<div class="crud">
+  <% if notice.present? %>
+    <p class="flash-notice" id="notice"><%= notice %></p>
+  <% end %>
+
+  <div class="page-header">
+    <h1 class="page-title">Cities</h1>
+    <%= link_to "New city", new_city_path, class: "btn-primary" %>
+  </div>
+
+  <div id="cities" class="min-w-full">
+    <% @cities.each do |city| %>
+      <%= render city %>
+      <p>
+        <%= link_to "Show this city", city, class: "ml-2 btn-secondary" %>
+      </p>
+    <% end %>
+  </div>
+</div>

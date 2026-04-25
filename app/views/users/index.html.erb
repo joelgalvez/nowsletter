@@ -1,0 +1,76 @@
+<div class="crud">
+  <div class="page-header">
+    <h1 class="text-3xl font-bold">User Management</h1>
+    <%= link_to "New User", new_user_path, class: "btn-primary" %>
+  </div>
+
+  <div class="index-card">
+    <div class="index-card-header">
+      <div class="sm:flex-auto">
+        <p class="text-sm text-gray-600">A list of all users with their role and venue.</p>
+      </div>
+      <div class="mt-4 sm:mt-0 sm:flex-none flex items-center gap-4">
+        <%= render "shared/search_form", url: users_path, query: @query, placeholder: "Search users...", frame_id: "users_list", sort: @sort, direction: @direction %>
+        <span class="badge-count"><%= pluralize(@users.total_count, 'user') %></span>
+      </div>
+    </div>
+
+    <%= turbo_frame_tag "users_list" do %>
+      <div class="index-table overflow-x-auto">
+        <div class="index-row index-row-header grid grid-cols-[3fr_1fr_2fr_1fr_1fr]">
+          <div class="index-th"><%= sortable "email_address", "Email", frame: "users_list" %></div>
+          <div class="index-th"><%= sortable "role", "Role", frame: "users_list" %></div>
+          <div class="index-th-label">Venue</div>
+          <div class="index-th"><%= sortable "created_at", "Created", frame: "users_list" %></div>
+          <div class="index-th-label text-right">Actions</div>
+        </div>
+
+        <% if @users.present? %>
+          <% @users.each do |user| %>
+            <div class="index-row grid grid-cols-[3fr_1fr_2fr_1fr_1fr] bg-white hover:bg-gray-50 transition-colors">
+              <div class="index-td">
+                <div class="index-td-text">
+                  <% if @query.present? %>
+                    <%= highlight(user.email_address, @query, highlighter: '<span class="bg-yellow-100">\1</span>') %>
+                  <% else %>
+                    <%= user.email_address %>
+                  <% end %>
+                </div>
+              </div>
+              <div class="index-td">
+                <span class="<%= user.admin? ? 'badge-blue' : user.editor? ? 'badge-green' : 'badge-gray' %>">
+                  <%= user.role || 'editor' %>
+                </span>
+              </div>
+              <div class="index-td">
+                <div class="text-sm text-gray-900"><%= user.venue&.title || '-' %></div>
+              </div>
+              <div class="index-td-muted"><%= user.created_at.strftime("%b %d, %Y") %></div>
+              <div class="index-td text-right">
+                <%= link_to "Edit", edit_user_path(user), class: "text-indigo-600 hover:text-indigo-900 mr-3", data: { turbo_frame: "_top" } %>
+                <%= button_to "Delete", user_path(user), method: :delete,
+                    data: { turbo_confirm: "Are you sure you want to delete this user?" },
+                    class: "text-red-600 hover:text-red-900 inline" %>
+              </div>
+            </div>
+          <% end %>
+        <% else %>
+          <div class="px-6 py-8 text-center text-gray-500 bg-white">
+            <% if @query.present? %>
+              No users found matching "<%= @query %>".
+              <%= link_to "Clear search", users_path(sort: @sort, direction: @direction), data: { turbo_frame: "users_list" }, class: "text-indigo-600 hover:text-indigo-900" %>.
+            <% else %>
+              No users found.
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+
+      <% if @users.total_pages > 1 %>
+        <div class="mt-4 flex justify-center pb-4">
+          <%= paginate @users, params: { sort: @sort, direction: @direction, query: @query } %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</div>

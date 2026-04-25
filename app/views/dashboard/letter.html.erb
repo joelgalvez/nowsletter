@@ -1,0 +1,433 @@
+<div class="" data-controller="scroll-position">
+	<div class="grid md:grid-cols-2 ">
+		<div class="">
+			<div class="h-[7rem] bg-white relative z-10  shadow-lg">
+				<div class="text-3xl font-medium p-2">Newsletter</div>
+				<div class="flex px-2 items-center gap-2  " data-controller="letter-selector">
+					
+					<div class="pr-12">
+						<select id="letter_select" 
+							data-letter-selector-target="select"
+							data-action="change->letter-selector#navigate"
+							class=" w-full  block px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+							<% @letters.each do |letter| %>
+								<option value="<%= letter.id %>" <%= 'selected' if letter.id == @letter.id %>>
+									<%= letter.venue&.title %> - <%= letter.subject&.truncate(50) %> - <%= letter.created_at.strftime("%b %d, %Y") %>
+								</option>
+							<% end %>
+						</select>
+					</div>
+
+				</div>
+				
+			</div>
+			<div class="hidden md:block">
+				<div class="w-full h-[calc(100vh_-_7rem)] overflow-y-auto"
+					data-controller="newsletter-frame"
+					data-newsletter-frame-url-value="<%= body_letter_path(@letter) %>"
+					data-scroll-position-target="newsletter"
+					data-action="newsletter-frame:loaded->scroll-position#newsletterLoaded">
+				</div>
+			</div>
+		</div>
+		<div class="flex flex-col h-screen md:border-l-2 md:border-black">
+			<div class="text-3xl font-medium py-2 md:pl-4 flex-shrink-0">Events</div>
+			<div class="relative flex-1 min-h-0 z-0">
+			<%= turbo_stream_from @letter %>
+			<div class="h-full overflow-y-auto md:pl-4 scroll-smooth" id="events-column" data-scroll-position-target="events">
+			<%= turbo_frame_tag "edit_events" do %>
+	<div class="log" data-controller="log-dialog">
+					<% if @logs&.any? %>
+						<div class="mb-6 p-3 pr-12 " data-controller="log-expand">
+							<div class="relative">
+								<div class="text-xs max-h-[12rem] overflow-hidden transition-all duration-300" data-log-expand-target="content">
+									<div class="px-2 mb-1">
+										<span>Log</span>
+									</div>
+									<% @logs.each do |log| %>
+									<div class="flex items-center gap-2 py-[0.1rem] px-2 hover:bg-gray-200 cursor-pointer transition-colors"
+										 data-action="click->log-dialog#open"
+										 data-log-title="<%= log.title %>"
+										 data-log-text="<%= log.text %>"
+										 data-log-venue="<%= log.venue&.title %>"
+										 data-log-event="<%= log.event&.title %>"
+										 data-log-letter="<%= log.letter&.subject %>"
+										 data-log-timestamp="<%= log.created_at.strftime("%B %d, %Y at %I:%M %p") %>"
+										 data-log-role="<%= log.role.capitalize %>"
+										 data-log-severity="<%= log.severity %>">
+										<span class="text-gray-400 flex-shrink-0 w-32">
+											<%= log.created_at.strftime("%m/%d %H:%M") %>
+										</span>
+										<span class="flex-shrink-0 w-36 truncate <%= log.user&.role == 'admin' ? 'text-blue-600' : 'text-black' %>">
+											<%= log.user&.email_address %>
+										</span>
+										<span class="flex-shrink-0 w-3">
+											<% if log.severity == 'critical' %>
+												<div class="w-2 h-2 rounded-full bg-red-500" title="Critical"></div>
+											<% elsif log.severity == 'high' %>
+												<div class="w-2 h-2 rounded-full bg-yellow-500" title="High"></div>
+											<% else %>
+												<div class="w-2 h-2 rounded-full " title="Normal"></div>
+											<% end %>
+										</span>
+										<span class="flex-1 truncate" title="<%= log.title %> <%= log.text %>">
+											<% if log.role == 'admin' %>
+												<span class="text-blue-600 font-bold">[A]</span>
+											<% end %>
+											<strong><%= log.title %></strong><% if log.text.present? %>: <%= log.text %><% end %>
+										</span>
+									</div>
+									<% end %>
+								</div>
+								<!-- Gradient overlay -->
+								<div class="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white to-transparent pointer-events-none" data-log-expand-target="gradient"></div>
+							</div>
+							<!-- See more/less buttons -->
+							<div class="mt-2 text-center border-b-2 border-black pb-2">
+								<button class="text-xs text-black hover:text-gray-600 font-medium"
+										data-action="click->log-expand#expand"
+										data-log-expand-target="expandButton">
+									See more
+								</button>
+								<button class="text-xs text-black hover:text-gray-600 font-medium hidden"
+										data-action="click->log-expand#collapse"
+										data-log-expand-target="collapseButton">
+									See less
+								</button>
+							</div>
+						</div>
+					<% end %>
+
+					<div class="pr-12">
+						<details class="elegant-details elegant-details-chevron ">
+							<summary>Consent &amp; settings</summary>
+							<div class="">
+								<div class="space-y-4">
+									<!-- Opt In Switch -->
+									<div class="flex items-start space-x-3"
+										data-controller="venue-settings"
+										data-venue-settings-enabled-value="<%= @letter.venue.opt_in ? 'true' : 'false' %>"
+										data-venue-settings-venue-id-value="<%= @letter.venue.id %>"
+										data-venue-settings-setting-name-value="opt_in"
+										data-venue-settings-setting-label-value="Opt In">
+										<button type="button"
+											data-action="click->venue-settings#toggle"
+											data-venue-settings-target="switch"
+											class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 <%= @letter.venue.opt_in ? 'bg-green-600' : 'bg-gray-300' %>">
+											<span data-venue-settings-target="slider"
+												class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform <%= @letter.venue.opt_in ? 'translate-x-6' : 'translate-x-1' %>"></span>
+										</button>
+										<div class="flex-1">
+											<label class="text-sm font-medium text-gray-700">Opt In to this project</label>
+											<p class="text-xs text-gray-500 mt-1">
+												Uncheck to hide everything from your venue from the website and any future API. This affects all your newsletters, past and future. This can be undone and re-done. 
+											</p>
+											<div data-venue-settings-target="statusText"></div>
+										</div>
+									</div>
+									
+									<!-- Accept Help Switch -->
+									<div class="flex items-start space-x-3"
+										data-controller="venue-settings"
+										data-venue-settings-enabled-value="<%= @letter.venue.accept_help ? 'true' : 'false' %>"
+										data-venue-settings-venue-id-value="<%= @letter.venue.id %>"
+										data-venue-settings-setting-name-value="accept_help"
+										data-venue-settings-setting-label-value="Accept Help">
+										<button type="button"
+											data-action="click->venue-settings#toggle"
+											data-venue-settings-target="switch"
+											class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 <%= @letter.venue.accept_help ? 'bg-green-600' : 'bg-gray-300' %>">
+											<span data-venue-settings-target="slider" 
+												class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform <%= @letter.venue.accept_help ? 'translate-x-6' : 'translate-x-1' %>"></span>
+										</button>
+										<div class="flex-1">
+											<label class="text-sm font-medium text-gray-700">Accept Help</label>
+											<p class="text-xs text-gray-500 mt-1">
+												Allow Admin to help out with the editing and publishing.
+											</p>
+											<div data-venue-settings-target="statusText"></div>
+										</div>
+									</div>
+									
+									<!-- Coming Soon Section -->
+									<div class="mt-6 pt-4 border-t border-gray-200">
+										<h4 class="text-sm font-semibold text-gray-600 mb-3">Coming Soon</h4>
+										
+										<!-- Publish API (Disabled) -->
+										<div class="flex items-start space-x-3 mb-4 opacity-75">
+											<button type="button"
+												disabled
+												class="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-300 cursor-not-allowed">
+												<span class="inline-block h-4 w-4 transform rounded-full bg-white translate-x-1"></span>
+											</button>
+											<div class="flex-1">
+												<label class="text-sm font-medium text-gray-600">Publish to API</label>
+												<p class="text-xs text-gray-500 mt-1">
+													This will make your events 100% public
+												</p>
+											</div>
+										</div>
+										
+										<!-- Push to Fediverse (Disabled) -->
+										<div class="flex items-start space-x-3 opacity-75 mb-4">
+											<button type="button"
+												disabled
+												class="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-300 cursor-not-allowed">
+												<span class="inline-block h-4 w-4 transform rounded-full bg-white translate-x-1"></span>
+											</button>
+											<div class="flex-1">
+												<label class="text-sm font-medium text-gray-600">Publish to Fediverse</label>
+												<p class="text-xs text-gray-500 mt-1">
+													Publish your events to instances to the instances you choose, the ones that you like and trust.
+												</p>
+											</div>
+										</div>
+
+										<div class="flex items-start space-x-3 opacity-75 mb-4">
+											<button type="button"
+												disabled
+												class="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-300 cursor-not-allowed">
+												<span class="inline-block h-4 w-4 transform rounded-full bg-white translate-x-1"></span>
+											</button>
+											<div class="flex-1">
+												<label class="text-sm font-medium text-gray-600">Automatically publish</label>
+												<p class="text-xs text-gray-500 mt-1">
+													If the AI works well enough, you will be able to set it and forget it. You will still get notified and can make corrections if needed.
+												</p>
+											</div>
+										</div>
+
+										<div class="flex items-start space-x-3 opacity-75">
+											<button type="button"
+												disabled
+												class="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-300 cursor-not-allowed">
+												<span class="inline-block h-4 w-4 transform rounded-full bg-white translate-x-1"></span>
+											</button>
+											<div class="flex-1">
+												<label class="text-sm font-medium text-gray-600">Cooperative corrections</label>
+												<p class="text-xs text-gray-500 mt-1">
+													Allow others to point out mistakes and suggest corrections to your events.
+												</p>
+											</div>
+										</div>
+
+
+									</div>
+								</div>
+							</div>
+						</details>
+
+						<% if Current.user.admin? %>
+							<!-- Global Settings (Admin Only) -->
+							<div class="">
+								<div class="space-y-4">
+									<!-- Test Mode Switch -->
+									<div class="flex items-start space-x-3 p-3 bg-yellow-50 border border-yellow-200 rounded-md"
+										data-controller="global-settings"
+										data-global-settings-enabled-value="<%= GlobalSetting.test_mode? ? 'true' : 'false' %>"
+										data-global-settings-setting-key-value="test_mode"
+										data-global-settings-setting-label-value="Test Mode">
+										<button type="button"
+											data-action="click->global-settings#toggle"
+											data-global-settings-target="switch"
+											class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 <%= GlobalSetting.test_mode? ? 'bg-green-600' : 'bg-gray-300' %>">
+											<span data-global-settings-target="slider"
+												class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform <%= GlobalSetting.test_mode? ? 'translate-x-6' : 'translate-x-1' %>"></span>
+										</button>
+										<div class="flex-1">
+											<label class="text-sm font-medium text-gray-700">Test Mode</label>
+											<p class="text-xs text-gray-600 mt-1">
+												When enabled, all emails will be sent to hello@publicdata.events instead of actual recipients. This is a global setting that affects all email sending throughout the application.
+											</p>
+											<div data-global-settings-target="statusText"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						
+						<% end %>
+
+					</div>
+
+					<!-- Log Details Dialog -->
+					<div data-log-dialog-target="dialog" 
+						 data-action="click->log-dialog#closeOnBackdrop"
+						 class="hidden fixed inset-0 bg-black/20 bg-opacity-50 items-center justify-center z-50">
+						<div class="bg-white rounded-lg max-w-2xl w-full mx-4 p-6 shadow-xl">
+							<div class="flex justify-between items-start mb-4">
+								<h2 class="text-xl font-bold" data-log-dialog-target="title"></h2>
+								<button data-action="click->log-dialog#close" 
+										class="text-gray-400 hover:text-gray-600">
+									<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+									</svg>
+								</button>
+							</div>
+							
+							<div class="space-y-3">
+								<div>
+									<span class="font-medium text-gray-600">Description:</span>
+									<p class="text-gray-800 mt-1" data-log-dialog-target="text"></p>
+								</div>
+								
+								<div class="grid grid-cols-2 gap-4">
+									<div>
+										<span class="font-medium text-gray-600">Timestamp:</span>
+										<p class="text-gray-800" data-log-dialog-target="timestamp"></p>
+									</div>
+									<div>
+										<span class="font-medium text-gray-600">Severity:</span>
+										<p data-log-dialog-target="severity"></p>
+									</div>
+								</div>
+								
+								<div class="grid grid-cols-2 gap-4">
+									<div>
+										<span class="font-medium text-gray-600">Role:</span>
+										<p class="text-gray-800" data-log-dialog-target="role"></p>
+									</div>
+									<% if Current.user.admin? %>
+										<div>
+											<span class="font-medium text-gray-600">Venue:</span>
+											<p class="text-gray-800" data-log-dialog-target="venue"></p>
+										</div>
+									<% end %>
+								</div>
+								
+								<div class="grid grid-cols-2 gap-4">
+									<div>
+										<span class="font-medium text-gray-600">Related Event:</span>
+										<p class="text-gray-800" data-log-dialog-target="event"></p>
+									</div>
+									<div>
+										<span class="font-medium text-gray-600">Related Letter:</span>
+										<p class="text-gray-800" data-log-dialog-target="letter"></p>
+									</div>
+								</div>
+							</div>
+							
+							<div class="mt-6 flex justify-end">
+								<button data-action="click->log-dialog#close"
+										class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+									Close
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="max-w-[40rem]  my-16">
+					<div class="flex flex-wrap gap-2 mb-6">
+						<%= button_to "Publish All", publish_all_dashboard_letter_path(@letter), 
+							method: :patch, 
+							class: "px-4 py-3 text-sm font-medium bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500",
+							data: { turbo_confirm: "Are you sure you want to publish all events?" } %>
+						<%= button_to "Unpublish All", unpublish_all_dashboard_letter_path(@letter), 
+							method: :patch, 
+							class: "px-4 py-3 text-sm font-medium bg-gray-600 text-white rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500",
+							data: { turbo_confirm: "Are you sure you want to unpublish all events?" } %>
+						<% if Current.user.admin? %>
+							<%= button_to "Delete All Events and run again", delete_all_events_dashboard_letter_path(@letter),
+								method: :delete,
+								class: "px-4 py-3 text-sm font-medium bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500",
+								data: {
+									turbo_confirm: "WARNING: This will delete ALL events from this newsletter and requeue it for processing. This action cannot be undone. Are you sure?",
+									turbo_frame: "_top"
+								} %>
+						<% end %>
+					</div>
+
+					<% if Current.user.admin? %>
+						<% email_templates = EmailTemplate.all.to_a %>
+						<% default_email_template = email_templates.find { |t| t.key == "default" } %>
+						<%= form_with url: send_custom_template_dashboard_letter_path(@letter), method: :post, class: "mb-6", data: { controller: "email-template-picker", "email-template-picker-templates-value": email_templates.each_with_object({}) { |t, h| h[t.id] = t.text.to_s }.to_json } do |form| %>
+							<select class="block w-full rounded-md border border-gray-400 px-3 py-2 text-sm focus:outline-blue-600"
+								data-email-template-picker-target="select"
+								data-action="change->email-template-picker#change focus->email-template-picker#selectFocus">
+								<% email_templates.each do |template| %>
+									<option value="<%= template.id %>" <%= "selected" if template.id == default_email_template&.id %>><%= "(#{template.key}) - #{template.text.to_s.truncate(80)}" %></option>
+								<% end %>
+							</select>
+							<%= form.text_area :body, rows: 6, class: "mt-2 block w-full rounded-md border border-gray-400 px-3 py-2 text-sm font-mono focus:outline-blue-600", value: default_email_template&.text, data: { "email-template-picker-target": "textarea", action: "input->email-template-picker#markDirty" } %>
+							<div class="mt-2 flex justify-end">
+								<%= form.submit "Send", class: "px-4 py-3 text-sm font-medium bg-blue-600 text-white rounded-md hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer", data: { turbo_confirm: "Send this email to all editors of #{@letter.venue.title}?" } %>
+							</div>
+						<% end %>
+					<% end %>
+
+					<div class="my-2">
+						<%= link_to "Create new event", new_dashboard_event_path(@letter), 
+							data: { turbo_frame: "event_modal" },
+							class: "text-sm underline hover:text-red-400 text-gray-600" %> <span class="text-sm text-gray-400">(hopefully not needed!)</span>
+					</div>
+
+					<div id="events_list">
+						<% @events.each do |event| %>
+							<%= render "dashboard/event_card", event: event %>
+						<% end %>
+					</div>
+
+					<% if @images.present? %>
+						<div class="pr-12 my-16">
+							<details class="elegant-details elegant-details-chevron">
+								<summary>Image Blacklist 🚫</summary>
+								<div class="mt-4">
+									<p class="mb-2 text-sm text-gray-600">A common mistake the model does is to pick the wrong image. You can help by blacklisting images it should never pick, such as social media icons, logos, decorative graphics, etc.</p>
+									<p class="mb-4 text-sm text-gray-600">Click on an image to toggle its blacklist status. Blacklisted images will be ignored when selecting images for events.</p>
+									<%= render "dashboard/image_blacklist", images: @images, letter: @letter %>
+								</div>
+							</details>
+						</div>
+					<% end %>
+
+				</div>		
+			<% end %>	
+		</div>
+		<% if @letter.status == "pending" %>
+			<div id="processing-overlay" class="absolute inset-0 bg-white/85 z-50 flex flex-col items-center justify-center">
+				<div class="animate-spin rounded-full h-12 w-12 border-b-4 border-blue-600 mb-4"></div>
+				<p class="text-lg font-medium text-gray-700">Being processed, hang on...</p>
+			</div>
+		<% elsif @letter.status == "error" %>
+			<div id="processing-overlay" class="absolute inset-0 bg-red-50/90 z-50 flex flex-col items-center justify-center">
+				<svg class="w-12 h-12 text-red-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+				</svg>
+				<p class="text-lg font-medium text-red-700 mb-2">Processing error</p>
+				<p class="text-sm text-red-600 mb-4">Something went wrong. Please check the logs.</p>
+				<button onclick="document.getElementById('processing-overlay').remove()" class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700">Dismiss</button>
+			</div>
+		<% end %>
+			</div>
+		</div>
+	</div>
+
+	<div data-controller="event-modal">
+		<dialog data-event-modal-target="dialog" data-action="click->event-modal#closeOnBackdrop" class="w-full max-w-4xl h-scree mx-auto my-auto shadow-3xl overflow-y-auto p-0 backdrop:bg-black/50">
+			<div class="relative">
+				<button type="button" data-action="event-modal#close" class="absolute top-2 right-2 z-10 rounded-full bg-gray-200 hover:bg-gray-300 w-8 h-8 flex items-center justify-center text-gray-600">&times;</button>
+				<%= turbo_frame_tag "event_modal", data: { action: "turbo:frame-load->event-modal#frameLoaded" } do %>
+				<% end %>
+			</div>
+		</dialog>
+	</div>
+
+</div>
+
+<script>
+	// Scroll to anchor in the nested scroll container.
+	// Native anchor scroll is unreliable in overflow containers, so we do it ourselves.
+	(() => {
+		if (!location.hash) return
+		const col = document.getElementById("events-column")
+		if (!col) return
+		// Reset to top so the smooth scroll is visible
+		col.style.scrollBehavior = "auto"
+		col.scrollTop = 0
+		col.style.scrollBehavior = ""
+		// Wait for layout, then smooth scroll
+		requestAnimationFrame(() => {
+			const el = document.getElementById(location.hash.slice(1))
+			if (el) el.scrollIntoView({ behavior: "smooth", block: "start" })
+		})
+	})()
+</script>

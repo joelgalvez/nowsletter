@@ -1,0 +1,22 @@
+<div id="<%= dom_id log %>" class="w-full sm:w-auto my-5 space-y-5">
+  <div>
+    <strong class="block font-medium mb-1">Title:</strong>
+    <%= log.title %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Venue:</strong>
+    <%= log.venue_id %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">User:</strong>
+    <%= log.user&.email_address || "-" %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Role:</strong>
+    <%= log.role %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Severity:</strong>
+    <%= log.severity %>
+  </div>
+</div>

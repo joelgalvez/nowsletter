@@ -1,0 +1,37 @@
+<% if @letter %>
+  <% editor_logs = Log.where(letter: @letter, role: 'editor').order(created_at: :asc) %>
+
+  <% if editor_logs.any? %>
+    <div style="margin-top: 40px; padding: 10px; background-color: #f9fafb; border: 1px solid #e5e7eb;">
+      <h3 style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600; color: #374151;">Changes made</h3>
+
+      <div style="font-size: 14px;">
+        <% editor_logs.each do |log| %>
+          <div style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #e5e7eb;">
+            <div style="color: #1f2937; margin-bottom: 4px;">
+              <div style="font-size:12px;margin-bottom:4px;">
+                <%= log.title %>
+              </div>
+              <% if log.event %>
+                <span style="font-weight: 600;"><%=log.event.title%></span>
+              <% end %>
+            </div>
+
+            <% if log.text.present? %>
+              <div style="color: #6b7280; margin-bottom: 4px;">
+                <%= log.text.gsub("\n", "<br>").html_safe %>
+              </div>
+            <% end %>
+
+            <div style="font-size: 12px; color: #9ca3af;">
+              <%= log.created_at.strftime("%B %d, %Y at %I:%M %p") %>
+              <% if log.user %>
+                by <%= log.user.email_address %>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+<% end %>

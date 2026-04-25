@@ -1,0 +1,14 @@
+<%= turbo_frame_tag(request.path.include?('/dashboard/') ? "event_modal" : "edit_events") do %>
+  <div class="">
+    <% if request.path.include?('/dashboard/') %>
+      <%= render "dashboard/form", event: @event %>
+    <% else %>
+      <%= render "form", event: @event %>
+    <% end %>
+
+    <% unless request.path.include?('/dashboard/') %>
+      <%= link_to "Show this event", @event, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+      <%= link_to "Back to events", events_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+    <% end %>
+  </div>
+<% end %>
