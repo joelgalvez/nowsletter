@@ -14,13 +14,12 @@ The web server also runs postfix and waits for incoming email. Every place you s
 **How it works:**
 
 1. You subscribe to newsletters using one unique email per venue: "secret-xxxxxx@email.com"
-2. The first email is 
-3. Action Mailbox receives the email and creates a `Letter` record
-4. An external parser worker picks up the `LlmJob`, sends the letter text to an LLM, and posts the structured JSON back
-5. The app creates `Event` records from the result
-6. You check how it looks, change things maybe, maybe publish in the dashboard
-5. Venue editors (the newsletter authors) do the same thing, if they want
-6. The result is a calendar
+2. Action Mailbox receives the email and creates a `Letter` record
+3. An external parser worker picks up the `LlmJob`, sends the letter text to an LLM, and posts the structured JSON back
+4. The app creates `Event` records from the result
+5. You check how it looks, change things maybe, maybe publish in the dashboard
+6. Venue editors (the newsletter authors) do the same thing, if they want
+7. The result is a calendar
 
 ---
 
