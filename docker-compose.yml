@@ -1,0 +1,41 @@
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      SOLID_QUEUE_IN_PUMA: "true"
+    volumes:
+      - storage:/rails/storage
+      - cached_images:/rails/public/cached_images
+    depends_on:
+      - caddy
+
+  postfix:
+    build: docker/postfix
+    restart: unless-stopped
+    ports:
+      - "25:25"
+    environment:
+      MAIL_DOMAIN: ${VENUE_EMAIL_DOMAIN}
+      APP_DOMAIN: ${APP_HOST}
+      RAILS_INBOUND_EMAIL_PASSWORD: ${RAILS_INBOUND_EMAIL_PASSWORD}
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    env_file: .env
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  storage:
+  cached_images:
+  caddy_data:
+  caddy_config:

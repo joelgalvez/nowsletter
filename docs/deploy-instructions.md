@@ -1,8 +1,3 @@
-apt update
-apt upgrade
-apt install -y vim mc ncdu htop net-tools nethogs
-
-
 # Deploy instructions
 
 End-to-end guide for setting up a new environment (e.g. `dev`, `staging`) with Kamal, including the Postfix mail relay.
@@ -12,7 +7,7 @@ End-to-end guide for setting up a new environment (e.g. `dev`, `staging`) with K
 - Server with SSH root access. Docker installed by Kamal if missing
 - DNS under your control for the app domain and mail domain
 - `KAMAL_REGISTRY_PASSWORD` exported in your shell (Docker Hub token)
-- Access to the remote build server (`ssh://www-data@100.87.44.97`) or change `builder` to build locally
+- A Docker Hub account (free) for storing the built image
 
 ## 1. DNS
 
@@ -123,7 +118,7 @@ servers:
 
 proxy:
   ssl: true
-  host: amsterdamart.nowsletter.org
+  host: ENVNAME.yourdomain.com
 
 registry:
   username: DOCKERHUB_ACCOUNT
@@ -135,8 +130,8 @@ env:
     - RAILS_MASTER_KEY
   clear:
     SOLID_QUEUE_IN_PUMA: true
-    RAILS_ENV: amsterdamart
-    APP_HOST: amsterdamart.nowsletter.org
+    RAILS_ENV: ENVNAME
+    APP_HOST: ENVNAME.yourdomain.com
     INITIAL_ADMIN_EMAIL: your@admin-email.com
     DEFAULT_FROM_EMAIL: from@yourdomain.com
     EMAIL_PREFIX_PATTERN: secret-
@@ -171,7 +166,7 @@ asset_path: /rails/public/assets
 builder:
   arch: amd64
   local: false
-  remote: ssh://www-data@100.87.44.97
+  local: true  # or: remote: ssh://user@build-server for a faster remote build
   args:
     RUBY_VERSION: 3.4.5
   secrets:
@@ -184,7 +179,7 @@ builder:
 ## 6. Build and push the Postfix image
 
 ```bash
-docker buildx build --platform linux/amd64 -t DOCKERHUB_ACCOUNT/amsterdamart-postfix --push docker/postfix/
+docker buildx build --platform linux/amd64 -t DOCKERHUB_ACCOUNT/APPNAME-postfix --push docker/postfix/
 ```
 
 `--platform linux/amd64` is required from an ARM Mac. Only repeat when `Dockerfile` or `entrypoint.sh` change — config is injected at runtime.
@@ -286,3 +281,10 @@ end
 App on `http://INTERNAL_HOSTNAME_OR_IP`. No public DNS needed — use the server IP or an internal DNS entry.
 
 If inbound mail isn't needed in this environment, omit the `accessories.postfix` block entirely.
+
+
+## Running tests
+
+```bash
+bin/rails test
+```
