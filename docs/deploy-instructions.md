@@ -1,6 +1,7 @@
 # Deploy instructions
 
-End-to-end guide for setting up a new environment (e.g. `dev`, `staging`) with Kamal, including the Postfix mail relay.
+End-to-end guide for setting up a new environment (e.g. `dev`, `staging`) with Kamal, including the Postfix mail relay. 
+This guide hasn't been tested yet.
 
 ## Prerequisites
 

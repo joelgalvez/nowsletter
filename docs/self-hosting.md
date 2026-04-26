@@ -1,6 +1,6 @@
 # Self-Hosting Guide
 
-This guide is for running Nowsletter on your own server. You don't need to know Ruby or Rails.
+This guide is for running Nowsletter on your own server. You don't need to know Ruby or Rails. This hasn't been tested yet.
 
 There are two ways to deploy:
 
