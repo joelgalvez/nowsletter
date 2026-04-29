@@ -17,7 +17,7 @@ class City < ApplicationRecord
   scope :with_list, ->(list) { joins(events: { venue: :lists }).where(events: { venue: { lists: list } }) }
 
   # New scope to filter by venues that have opted in
-  scope :with_opted_in_venues, -> { joins(events: :venue).where(events: { venues: { opt_in: true, opt_out: false } } ) }
+  scope :with_opted_in_venues, -> { joins(events: :venue).where(events: { venues: { opt_in: true, opt_out: false } }) }
   scope :with_not_opted_out_venues, -> { joins(events: :venue).where(events: { venues: { opt_out: false } }) }
 
   # New scope to filter by venues that have NOT opted in

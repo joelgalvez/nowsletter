@@ -12,5 +12,4 @@ class ApplicationController < ActionController::Base
   def load_pages_for_sidebar
     @pages = Page.all
   end
-
 end

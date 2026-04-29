@@ -31,7 +31,7 @@ module DateHelper
 
           visible_start = start_time == "00:00" ? nil : start_time
           visible_end = end_time == "00:00" ? nil : end_time
-          time_range = [visible_start, visible_end].compact.join("–")
+          time_range = [ visible_start, visible_end ].compact.join("–")
           time_part = time_range.present? ? ", #{time_range}" : ""
           ret = "#{day_name} #{start_date.strftime('%e %B')}#{time_part}#{year}"
 
