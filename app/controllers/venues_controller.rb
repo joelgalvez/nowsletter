@@ -41,6 +41,8 @@ class VenuesController < ApplicationController
   def new
     @venue = Venue.new
     @tags = Tag.order(:title)
+    @cities = City.includes(:country).order("countries.country_code, cities.name")
+    @all_countries = Country::ALL_COUNTRY_CODES
   end
 
   # GET /venues/1/edit
@@ -50,6 +52,8 @@ class VenuesController < ApplicationController
     @users = @venue.users
     @new_user = User.new(venue_id: @venue.id)
     @tags = Tag.order(:title)
+    @cities = City.includes(:country).order("countries.country_code, cities.name")
+    @all_countries = Country::ALL_COUNTRY_CODES
   end
 
   # GET /venues/search.json
@@ -155,7 +159,7 @@ class VenuesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def venue_params
-      params.require(:venue).permit(:title, :website, :code, :opt_in, :accept_help, :checked, tag_ids: [])
+      params.require(:venue).permit(:title, :website, :code, :city_id, :opt_in, :accept_help, :checked, tag_ids: [])
     end
 
     # Log setting changes

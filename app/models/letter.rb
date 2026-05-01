@@ -68,7 +68,8 @@ class Letter < ApplicationRecord
         prompt: default_prompt.text
           .gsub("{{{text}}}", substituted_text)
           .gsub('#{today}', Date.today.strftime("%Y-%m-%d"))
-          .gsub('#{sent_date}', sent_date.strftime("%Y-%m-%d")),
+          .gsub('#{sent_date}', sent_date.strftime("%Y-%m-%d"))
+          .gsub("{city}", venue.city&.name.to_s),
         status: "new",
         letter: self,
         model: default_model

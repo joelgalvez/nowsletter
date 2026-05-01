@@ -22,6 +22,49 @@
       <%= form.text_field :website, placeholder: "example.com", class: "mt-1 block w-full shadow-sm rounded-md border border-gray-300 py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
     </div>
 
+    <div data-controller="city-selector">
+      <%= form.label :city_id, "City", class: "block text-sm font-medium text-gray-700" %>
+      <%= form.select :city_id,
+            options_for_select(
+              @cities.map { |city| ["#{city.country.country_code} - #{city.name}", city.id] } + [["➕ Add new city...", "new"]],
+              venue.city_id
+            ),
+            { include_blank: "Select a city..." },
+            class: "mt-1 block w-full shadow-sm rounded-md border border-gray-400 outline-none px-3 py-2",
+            data: {
+              "city-selector-target": "select",
+              "action": "change->city-selector#toggleNewCityInput"
+            } %>
+
+      <div class="mt-3 hidden" data-city-selector-target="newCityContainer">
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <select class="block shadow rounded-md border border-gray-400 outline-none px-3 py-2 w-full"
+              data-city-selector-target="countryCodeInput">
+              <option value="">Select Country...</option>
+              <% @all_countries.each do |code, name| %>
+                <option value="<%= code %>"><%= code %> - <%= name %></option>
+              <% end %>
+            </select>
+          </div>
+          <div>
+            <input type="text"
+              placeholder="City Name (e.g., New York)"
+              class="block shadow rounded-md border border-gray-400 outline-none px-3 py-2 w-full"
+              data-city-selector-target="cityNameInput">
+          </div>
+        </div>
+        <button type="button"
+          class="mt-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+          data-city-selector-target="addButton"
+          data-action="click->city-selector#addNewCity">
+          Add City
+        </button>
+      </div>
+
+      <div class="hidden" data-city-selector-target="feedback"></div>
+    </div>
+
     <div>
       <%= form.label :code, class: "block text-sm font-medium text-gray-700" %>
       <%= form.text_field :code, 
