@@ -253,7 +253,7 @@ class EventsController < ApplicationController
 
   def remove_image
     old_url = @event.lead_image
-    @event.update(lead_image: nil)
+    @event.update(lead_image: nil, lead_image_cached: nil)
 
     Log.create!(
       title: "Event Lead Image Removed",
