@@ -64,12 +64,21 @@ class Letter < ApplicationRecord
     end
 
     ActiveRecord::Base.transaction do
+      values = {
+        "city" => venue.city&.name.to_s,
+        "country_code" => venue.city&.country&.country_code.to_s
+      }
+
+      prompt_text = default_prompt.text
+        .gsub("{{{text}}}", substituted_text)
+        .gsub('#{today}', Date.today.strftime("%Y-%m-%d"))
+        .gsub('#{sent_date}', sent_date.strftime("%Y-%m-%d"))
+        .then { |t| apply_conditionals(t, values) }
+        .gsub("{city}", values["city"])
+        .gsub("{country_code}", values["country_code"])
+
       llm_job = LlmJob.create!(
-        prompt: default_prompt.text
-          .gsub("{{{text}}}", substituted_text)
-          .gsub('#{today}', Date.today.strftime("%Y-%m-%d"))
-          .gsub('#{sent_date}', sent_date.strftime("%Y-%m-%d"))
-          .gsub("{city}", venue.city&.name.to_s),
+        prompt: prompt_text,
         status: "new",
         letter: self,
         model: default_model
@@ -133,5 +142,13 @@ class Letter < ApplicationRecord
     html = html.gsub(venue.code, "") if venue&.code.present?
 
     html
+  end
+
+  private
+
+  def apply_conditionals(text, values)
+    text.gsub(/\{\{if-(\w+)\}\}(.*?)\{\{endif-\1\}\}/m) do
+      values[Regexp.last_match(1)].present? ? Regexp.last_match(2) : ""
+    end
   end
 end
