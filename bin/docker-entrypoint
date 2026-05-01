@@ -6,10 +6,12 @@ if [ -z "${LD_PRELOAD+x}" ]; then
     export LD_PRELOAD
 fi
 
-# Fall back to example config if database.yml wasn't included in the build context
-if [ ! -f config/database.yml ]; then
-  cp config/database.example.yml config/database.yml
-fi
+# Fall back to example configs for any files not included in the build context
+for config in database cable cache recurring; do
+  if [ ! -f "config/${config}.yml" ] && [ -f "config/${config}.example.yml" ]; then
+    cp "config/${config}.example.yml" "config/${config}.yml"
+  fi
+done
 
 # If running the rails server then create or migrate existing database
 if [ "${@: -2:1}" == "./bin/rails" ] && [ "${@: -1:1}" == "server" ]; then
