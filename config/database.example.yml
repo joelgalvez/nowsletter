@@ -63,21 +63,23 @@ staging:
     database: storage/staging_cable.sqlite3
     migrations_paths: db/cable_migrate
 
-# Add a section here for each custom Rails environment you create.
-# Example:
-# my_env:
-#   primary:
-#     <<: *default
-#     database: storage/my_env.sqlite3
-#   cache:
-#     <<: *default
-#     database: storage/my_env_cache.sqlite3
-#     migrations_paths: db/cache_migrate
-#   queue:
-#     <<: *default
-#     database: storage/my_env_queue.sqlite3
-#     migrations_paths: db/queue_migrate
-#   cable:
-#     <<: *default
-#     database: storage/my_env_cable.sqlite3
-#     migrations_paths: db/cable_migrate
+<% custom_env = ENV.fetch("RAILS_ENV", nil)
+   known_envs = %w[development test production staging]
+   if custom_env && !known_envs.include?(custom_env) %>
+<%= custom_env %>:
+  primary:
+    <<: *default
+    database: storage/<%= custom_env %>.sqlite3
+  cache:
+    <<: *default
+    database: storage/<%= custom_env %>_cache.sqlite3
+    migrations_paths: db/cache_migrate
+  queue:
+    <<: *default
+    database: storage/<%= custom_env %>_queue.sqlite3
+    migrations_paths: db/queue_migrate
+  cable:
+    <<: *default
+    database: storage/<%= custom_env %>_cable.sqlite3
+    migrations_paths: db/cable_migrate
+<% end %>

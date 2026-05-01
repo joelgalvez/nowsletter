@@ -13,6 +13,11 @@ for config in database cable cache recurring; do
   fi
 done
 
+# Generate a production-equivalent environment file for custom RAILS_ENV values
+if [ -n "${RAILS_ENV}" ] && [ ! -f "config/environments/${RAILS_ENV}.rb" ]; then
+  echo 'require_relative "production"' > "config/environments/${RAILS_ENV}.rb"
+fi
+
 # If running the rails server then create or migrate existing database
 if [ "${@: -2:1}" == "./bin/rails" ] && [ "${@: -1:1}" == "server" ]; then
   ./bin/rails db:prepare
