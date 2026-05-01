@@ -19,7 +19,9 @@ production: &production
 staging:
   <<: *production
 
-# Add a section here for each custom Rails environment you create.
-# Example:
-# my_env:
-#   <<: *production
+<% custom_env = ENV.fetch("RAILS_ENV", nil)
+   known_envs = %w[development test production staging]
+   if custom_env && !known_envs.include?(custom_env) %>
+<%= custom_env %>:
+  <<: *production
+<% end %>
