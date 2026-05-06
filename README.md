@@ -7,8 +7,6 @@ This is a collaborative tool for collecting events from newsletters using local 
 
 The idea is that you got some computer on your own work/home network that does the inference. For security reasons, the web server can't contact the LLM server directly. Instead the LLM Server contacts the web server and creates a web socket to wait for jobs.
 
- The LLM server calls the web server and creates a web socket and waits for jobs.
-
 The web server also runs postfix and waits for incoming email. Postfix is only for recieving email, for sending use some other SMTP service. Every place you subscribe to gets their own secret email inbox (secret-xxxxxx@email.com). Any other email is ignored.
 
 **How it works:**

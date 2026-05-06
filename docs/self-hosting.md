@@ -1,13 +1,6 @@
-(This guide hasn't been tested yet, so steps might be missing/wrong.)
-
 # Self-Hosting Guide
 
-This guide is for running Nowsletter on your own server. You don't need to know Ruby or Rails. 
-
-There are two ways to deploy:
-
-- **Docker Compose** (this guide) — simpler, everything runs on one server with a single command
-- **Kamal** — for zero-downtime deploys, remote build servers, and multiple environments. See `docs/deploy-instructions.md`.
+This guide is for running Nowsletter on your own server using docker.
 
 ---
 
@@ -27,6 +20,8 @@ Two parts:
 - A domain name you control
 - An SMTP provider for outgoing email (AWS SES, Mailgun, Postmark, etc.)
 - **Port 25 open for incoming traffic** on your server
+
+Usually port 25 **outgoing** is blocked. That's okay, you only need incoming email on your server. Outgoing email is sent by SMTP (by some other provider).
 
 ---
 
@@ -67,10 +62,12 @@ Copy the example env file:
 cp .env.example .env
 ```
 
-Edit `.env`:
+Edit `.env`
 
 
 ## 4. Deploy
+
+Install docker if you havent already, then:
 
 ```bash
 docker compose up -d --build
@@ -82,7 +79,7 @@ This builds the app image, starts all containers, runs database setup, and obtai
 
 ## 5. Log in
 
-Go to `https://app.example.com` and click **Forgot password** for `you@example.com` to set your password on first login.
+Go to `https://app.example.com` and click **Sign in** in the menu, then **Forgot password** for `you@example.com` to set your password on first login.
 
 ---
 
