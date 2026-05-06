@@ -111,7 +111,6 @@ docker compose up -d --build
 | Symptom | Likely cause |
 |---|---|
 | SSL certificate fails on first start | DNS not resolving yet — wait a few minutes and restart with `docker compose restart caddy` |
-| Emails not arriving | Port 25 blocked by your VPS provider — contact support to unblock it |
 | Mail arrives but app doesn't process it | `RAILS_INBOUND_EMAIL_PASSWORD` mismatch — must be identical in `.env` and the Postfix container |
 | App starts but emails aren't sent | Check SMTP credentials in `.env` and that your provider allows the `DEFAULT_FROM_EMAIL` domain |
 | `SECRET_KEY_BASE` error | Make sure it's set in `.env` — generate with `openssl rand -hex 64` |
