@@ -61,3 +61,4 @@
 /config/cable.yml
 /config/recurring.yml
 /config/environments/amsterdamart.rb
+.aider*

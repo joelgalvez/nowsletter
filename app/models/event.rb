@@ -108,9 +108,12 @@ scope :with_list, ->(list_id) { joins(venue: :lists).where(lists: { id: list_id 
       thumbnail_path = img_url.gsub(/\/lead_image\//, "/thumbnails/").gsub(/(\.\w+)$/, "_#{width}x#{height}#{ext}")
 
       if absolute
-        host = Rails.application.routes.default_url_options[:host]
+        url_opts = Rails.application.routes.default_url_options
+        host = url_opts[:host]
+        port = url_opts[:port]
+        host_with_port = port ? "#{host}:#{port}" : host
         protocol = Rails.env.production? ? "https" : "http"
-        "#{protocol}://#{host}#{thumbnail_path}"
+        "#{protocol}://#{host_with_port}#{thumbnail_path}"
       else
         thumbnail_path
       end

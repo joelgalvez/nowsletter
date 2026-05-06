@@ -16,7 +16,7 @@ class EventsByDayQuery
       .includes(:venue, :city, :tags)
       .from_date(@start_date.beginning_of_day)
       .until_date((@start_date + (@days - 1).days).end_of_day)
-      .with_not_opted_out_venues
+      .with_opted_in_venues
       .is_published
       .default_order(:asc)
 
