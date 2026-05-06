@@ -5,7 +5,7 @@
 This project has two parts:
 
 1. *NOWSLETTER* The (web) server - (this project). Can run on a VPS, or similar
-2. *RUNMODEL* The LLM server - ([github.com/joelgalvez/runmodel](https://github.com/joelgalvez/runmodel)). Runs on a private network, that also runs llama-server.
+2. *RUNMODEL* The LLM server (actually the client) - ([github.com/joelgalvez/runmodel](https://github.com/joelgalvez/runmodel)). Runs on a private network, that also runs llama-server.
 
 The idea is that you got some computer on your own work/home network that does the inference. For security reasons, the web server can't contact the LLM server directly. Instead the LLM Server contacts the web server and creates a web socket to wait for jobs.
 
