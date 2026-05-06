@@ -83,9 +83,20 @@ Go to `https://app.example.com` and click **Sign in** in the menu, then **Forgot
 
 ---
 
-## 6. Connect the LLM parser
+## 6. Test incoming
+
+Make a new venue, copy the secret email for it. Send a test mail to verify you're recieving emails.
+
+
+## 7. Connect the LLM parser
 
 The LLM parser is a separate project. Once it's running, point it at `https://app.example.com` and give it the `PARSER_EMAIL` and `PARSER_PASSWORD` you set above. Refer to the LLM server repo for setup instructions.
+
+
+## 8. Select model! (important)
+
+On te web server: menu -> settings, then select a model from the list of models you have available locally. Without this step the newsletter parsing won't work, it won't pick any model by default.
+
 
 ---
 
