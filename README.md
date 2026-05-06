@@ -1,5 +1,3 @@
-# Nowsletter
-
 *NOWSLETTER* ([nowsletter.org](https://nowsletter.org)) is a collaborative tool for collecting events from newsletters using local AI and to share the work of doing the corrections.
 
 
