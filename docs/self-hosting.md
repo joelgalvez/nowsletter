@@ -53,7 +53,7 @@ SSH into your server and clone the repo:
 
 ```bash
 ssh root@<your-server-ip>
-git clone <repo-url>
+git clone https://github.com/joelgalvez/nowsletter
 cd nowsletter
 ```
 
