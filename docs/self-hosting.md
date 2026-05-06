@@ -69,46 +69,6 @@ cp .env.example .env
 
 Edit `.env`:
 
-```bash
-APP_NAME=My Newsletter Hub
-APP_HOST=app.example.com
-INITIAL_ADMIN_EMAIL=you@example.com
-DEFAULT_FROM_EMAIL=hello@example.com
-
-# Inbound email — venues email newsletters to: <prefix><code>@inbox.example.com
-EMAIL_PREFIX_PATTERN=newsletter-
-VENUE_EMAIL_DOMAIN=inbox.example.com
-
-# SMTP (outgoing email)
-SMTP_ADDRESS=email-smtp.us-east-1.amazonaws.com
-SMTP_PORT=587
-SMTP_USER_NAME=your-smtp-username
-SMTP_PASSWORD=your-smtp-password
-
-# Shared secret between the app and the Postfix relay — generate a random string
-RAILS_INBOUND_EMAIL_PASSWORD=
-
-# Parser worker account — the LLM server logs in as this user
-PARSER_EMAIL=parser@example.com
-PARSER_PASSWORD=
-
-# Rails secret key — generate with: openssl rand -hex 64
-SECRET_KEY_BASE=
-
-# Optional
-TIME_ZONE=Europe/Amsterdam
-PLAUSIBLE_SCRIPT_URL=
-PLAUSIBLE_API_URL=
-```
-
-Generate the random values:
-
-```bash
-openssl rand -hex 32   # use for RAILS_INBOUND_EMAIL_PASSWORD and PARSER_PASSWORD
-openssl rand -hex 64   # use for SECRET_KEY_BASE
-```
-
----
 
 ## 4. Deploy
 
