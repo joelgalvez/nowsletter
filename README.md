@@ -4,6 +4,8 @@ This is a collaborative tool for collecting events from newsletters using local 
 
 See [nowsletter.org](https://nowsletter.org)
 
+This project has two parts:
+
 1. **Nowsletter** The (web) server - (this project). Can run on a VPS, or similar
 2. **Runmodel** The LLM server - ([github.com/joelgalvez/runmodel](https://github.com/joelgalvez/runmodel)). Runs on a private network, that also runs llama-server.
 
