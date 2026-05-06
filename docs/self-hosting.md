@@ -91,7 +91,7 @@ Make a new venue, copy the secret email for it. Send a test mail to verify you'r
 ## 7. Connect the LLM parser
 
 Setup your inference LLM server (actually client) 
-Instructions here `https://github.com/joelgalvez/runmodel/blob/main/self-hosted.md`
+Instructions here `[https://github.com/joelgalvez/runmodel/blob/main/self-hosted.md](https://github.com/joelgalvez/runmodel/blob/main/self-hosted.md)`
 
 The LLM parser is a separate project. Once it's running, point it at `https://app.example.com` and give it the `PARSER_EMAIL` and `PARSER_PASSWORD` you set above. Refer to the LLM server repo for setup instructions.
 
